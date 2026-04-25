@@ -10,18 +10,20 @@
 
 ### VPN / Conectividad Railway → Red ISP
 
-**Decision:** WireGuard con el Mikrotik core (IP pública) como servidor.
+**Decision (REVISED 2026-04-25):** Tailscale userspace — Railway no permite NET_ADMIN por lo que WireGuard (kernel y userspace boringtun/wireguard-go) es imposible. Confirmado por el técnico.
 
-- El Mikrotik con IP pública fija actúa como servidor WireGuard
-- Railway corre un contenedor/proceso WireGuard como cliente que se conecta al Mikrotik
-- Una vez establecido el túnel, el worker en Railway puede alcanzar toda la red privada del ISP
-- **No** se necesita VPS externo ni servidor dedicado
+- Railway corre Tailscale en modo userspace (`--tun=userspace-networking`) — no requiere NET_ADMIN
+- Tailscale expone un proxy SOCKS5 en `localhost:1055` que los collectors (librouteros, asyncssh, aiohttp) deben usar vía `ALL_PROXY`
+- El Mikrotik con IP pública actúa como **Tailscale subnet router** (anuncia las rutas de la red ISP privada a la red Tailscale)
+- Tailscale SaaS (no Headscale self-hosted) — gratis hasta 100 nodos
 
 **Implementation notes for planner:**
-- Configurar WireGuard en RouterOS v7 del Mikrotik (sección `/interface wireguard`)
-- Railway necesita NET_ADMIN capability para levantar interfaz WireGuard (verificar si Railway lo permite; alternativa: usar `boringtun` en userspace)
-- Las keys WireGuard (private key, peer public key, endpoint IP, allowed IPs) van en variables de entorno de Railway
-- El worker Celery debe verificar conectividad VPN al arrancar antes de intentar polling
+- Variable de entorno: `TAILSCALE_AUTH_KEY` (ephemeral key generada en el panel Tailscale)
+- El worker Dockerfile instala `tailscale` en modo userspace en el stage worker
+- Script `start-worker.sh`: arranca tailscaled → autentica → verifica conectividad → lanza Celery worker
+- El Mikrotik debe tener Tailscale instalado y configurado como subnet router antes del deploy
+- `ALL_PROXY=socks5://localhost:1055` debe estar seteado para que los collectors usen el tunnel
+- **Punto de validación manual:** confirmar que `librouteros`, `asyncssh` y `aiohttp` respetan `ALL_PROXY` en Phase 2
 
 ### RouterOS Version
 
@@ -69,12 +71,14 @@ beepyred-noc/
 
 ### Base de Datos
 
-**Decision:** PostgreSQL Railway managed desde el inicio.
+**Decision:** PostgreSQL Railway managed — sin TimescaleDB. Confirmado por el técnico.
 
 - Sin almacenamiento local efímero (sin SQLite, sin archivos)
 - Schema inicial en Phase 1 cubre: `devices`, `device_credentials`, `metrics`, `alerts`, `incidents`, `onus`
-- Migraciones con Alembic desde el día 1
+- Migraciones con Alembic async desde el día 1 (`alembic init -t async alembic`)
+- Métricas: tabla `metrics` con particionamiento por mes y BRIN index en `recorded_at` — sin TimescaleDB
 - Retención: las métricas y incidentes más viejos de 30 días se limpian automáticamente (Celery beat task)
+- Alembic migrations se ejecutan como pre-deploy command en Railway (no en startup del contenedor web)
 
 ### Gestión de Credenciales
 
