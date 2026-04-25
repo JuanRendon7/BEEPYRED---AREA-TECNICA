@@ -117,17 +117,53 @@
 
 ## Traceability
 
-| REQ-ID | Fase | Estado |
-|--------|------|--------|
-| INFRA-01..03 | Fase 1 | Pendiente |
-| AUTH-01..03 | Fase 1 | Pendiente |
-| INV-01..04 | Fase 1 | Pendiente |
-| POLL-01..05 | Fase 1-2 | Pendiente |
-| MK-01..04 | Fase 2 | Pendiente |
-| VSOL-01..05 | Fase 3 | Pendiente |
-| UBI-01..03 | Fase 4 | Pendiente |
-| MIM-01..03 | Fase 4 | Pendiente |
-| ALERT-01..06 | Fase 5 | Pendiente |
-| DASH-01..05 | Fase 5-6 | Pendiente |
-| INC-01..04 | Fase 5 | Pendiente |
-| DEPLOY-01..03 | Fase 1+6 | Pendiente |
+| REQ-ID | Phase | Status |
+|--------|-------|--------|
+| INFRA-01 | Phase 1: Infrastructure | Pending |
+| INFRA-02 | Phase 1: Infrastructure | Pending |
+| INFRA-03 | Phase 1: Infrastructure | Pending |
+| DEPLOY-01 | Phase 1: Infrastructure | Pending |
+| DEPLOY-02 | Phase 6: Dashboard Completo | Pending |
+| DEPLOY-03 | Phase 1: Infrastructure | Pending |
+| AUTH-01 | Phase 2: Foundation | Pending |
+| AUTH-02 | Phase 2: Foundation | Pending |
+| AUTH-03 | Phase 2: Foundation | Pending |
+| INV-01 | Phase 2: Foundation | Pending |
+| INV-02 | Phase 2: Foundation | Pending |
+| INV-03 | Phase 2: Foundation | Pending |
+| INV-04 | Phase 2: Foundation | Pending |
+| POLL-01 | Phase 2: Foundation | Pending |
+| POLL-02 | Phase 2: Foundation | Pending |
+| POLL-03 | Phase 2: Foundation | Pending |
+| POLL-04 | Phase 2: Foundation | Pending |
+| POLL-05 | Phase 2: Foundation | Pending |
+| MK-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| MK-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| MK-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| MK-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-05 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-06 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| VSOL-01 | Phase 4: VSOL OLT Collector | Pending |
+| VSOL-02 | Phase 4: VSOL OLT Collector | Pending |
+| VSOL-03 | Phase 4: VSOL OLT Collector | Pending |
+| VSOL-04 | Phase 4: VSOL OLT Collector | Pending |
+| VSOL-05 | Phase 4: VSOL OLT Collector | Pending |
+| UBI-01 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| UBI-02 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| UBI-03 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| MIM-01 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| MIM-02 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| MIM-03 | Phase 5: Ubiquiti y Mimosa Collectors | Pending |
+| DASH-01 | Phase 6: Dashboard Completo | Pending |
+| DASH-02 | Phase 6: Dashboard Completo | Pending |
+| DASH-03 | Phase 6: Dashboard Completo | Pending |
+| DASH-04 | Phase 6: Dashboard Completo | Pending |
+| DASH-05 | Phase 6: Dashboard Completo | Pending |
