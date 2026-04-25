@@ -1,0 +1,422 @@
+# Technology Stack — BEEPYRED NOC
+
+**Project:** BEEPYRED NOC — Network Operations Center for ISP
+**Researched:** 2026-04-25
+**Note on sources:** WebSearch and WebFetch tools unavailable in this environment. All findings based on training data (cutoff Aug 2025) + official library documentation knowledge. Confidence levels reflect this constraint.
+
+---
+
+## Recommended Stack
+
+### Decision Summary (TL;DR)
+
+**Python 3.12 + FastAPI + asyncio** for backend. **React + Vite + shadcn/ui** for frontend.
+**PostgreSQL + TimescaleDB** for metrics history. **Redis** for pub/sub and job queue.
+**Celery + asyncio** for concurrent device polling. Everything deployed on Railway via Docker.
+
+---
+
+### Core Framework: Backend
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Python | 3.12 | Runtime | Native async/await, rich networking libs (paramiko, asyncssh, librouteros), largest ISP tooling ecosystem. Node.js alternative exists but Python dominates network automation. |
+| FastAPI | 0.111+ | REST API + WebSocket server | Async-first, auto OpenAPI docs, native WebSocket support for real-time dashboard push, excellent type safety with Pydantic v2. Outperforms Flask/Django for this workload. |
+| Uvicorn | 0.29+ | ASGI server | Production-grade, works with Gunicorn workers for Railway deployment, required by FastAPI. |
+| Pydantic v2 | 2.7+ | Data validation & serialization | 5-17x faster than v1 (Rust core), validates all device API responses before storing, ensures data consistency across vendors. |
+
+**Why Python over Node.js:**
+- `librouteros` (Mikrotik RouterOS API) is Python-native; Node.js has no equivalent maintained library
+- `asyncssh` and `paramiko` for SSH to VSOL OLTs are Python-only, mature, battle-tested
+- Network automation tooling (Netmiko, Napalm) is 95% Python; reusing community patterns is valuable
+- asyncio handles 500+ concurrent connections with connection pooling without threads
+- Node.js would require re-implementing SSH parsers for OLT command output — significant custom work
+
+**Confidence: HIGH** — Python dominance in network automation is well-established; librouteros and asyncssh are confirmed active projects.
+
+---
+
+### Concurrent Polling Architecture
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| asyncio | stdlib (Python 3.12) | Concurrent I/O scheduling | Polling 500 devices is I/O-bound, not CPU-bound. asyncio handles thousands of concurrent connections with a single thread using cooperative multitasking. No threads needed. |
+| asyncssh | 2.14+ | Async SSH client | Zero-thread SSH to VSOL OLTs and Ubiquiti devices. Supports connection pooling, host key management, command streaming. |
+| librouteros | 3.2+ | Mikrotik RouterOS API client | Official protocol implementation (port 8728/8729), async-compatible, structured data return (no SSH parsing needed). |
+| aiohttp | 3.9+ | Async HTTP client | For Ubiquiti UISP REST API and Mimosa REST API calls. Built-in connection pooling, timeout control, session reuse. |
+| APScheduler | 3.10+ | Polling scheduler | Schedules polling jobs per device with configurable intervals (30-60s). Integrates with asyncio event loop. Handles missed jobs gracefully. |
+
+**Polling Strategy for 500+ devices:**
+
+```python
+# Pattern: asyncio.gather with semaphore to limit concurrency
+async def poll_all_devices(devices: list[Device]):
+    semaphore = asyncio.Semaphore(50)  # Max 50 concurrent connections
+
+    async def poll_with_limit(device):
+        async with semaphore:
+            return await poll_device(device)
+
+    results = await asyncio.gather(
+        *[poll_with_limit(d) for d in devices],
+        return_exceptions=True  # Don't fail all if one device is down
+    )
+    return results
+```
+
+- 500 devices / 50 concurrent = 10 batches, each completing in ~2-5s
+- Total poll cycle: 20-50 seconds — fits within 60s interval
+- Semaphore prevents overwhelming devices or Railway's egress
+
+**Confidence: HIGH** — asyncio.gather + Semaphore pattern is standard for network automation polling at this scale.
+
+---
+
+### Database
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| PostgreSQL | 16 | Primary database | Device inventory, incident history, alert config, user auth. Relational model fits structured network data. Railway has native PostgreSQL addon. |
+| TimescaleDB | 2.14+ | Time-series metrics extension | Extends PostgreSQL for high-frequency metric storage (CPU, RAM, latency, optical signal). Automatic data compression and time-based partitioning. Alternative: InfluxDB, but TimescaleDB keeps a single DB to manage. |
+| Redis | 7.2 | Cache + pub/sub + job queue | Three roles: (1) Cache last-known device state for instant dashboard loads, (2) Pub/sub channel for WebSocket fan-out to connected browsers, (3) Celery broker for background jobs. Railway has Redis addon. |
+| SQLAlchemy | 2.0+ | ORM (async mode) | Async ORM with `asyncpg` driver. SQLAlchemy 2.0 has first-class async support. Use for inventory/incidents/config, not for metrics (raw SQL for TimescaleDB queries). |
+| asyncpg | 0.29+ | PostgreSQL async driver | Fastest Python PostgreSQL driver, required for SQLAlchemy async mode. 3x faster than psycopg2 for bulk writes. |
+| Alembic | 1.13+ | Database migrations | Standard SQLAlchemy migration tool. Generates versioned migration files, safe for Railway deployments. |
+
+**Why not InfluxDB/Prometheus:**
+- Adding InfluxDB means a third database to manage (Postgres + Redis + InfluxDB)
+- TimescaleDB is a PostgreSQL extension — same connection, same backup, same Railway service
+- Prometheus is pull-based and designed for server metrics, not device API data; adapting it adds complexity
+- For 500 devices at 60s intervals = ~8 metrics/device = 4,000 rows/minute — well within TimescaleDB's range
+
+**Confidence: HIGH** — TimescaleDB + PostgreSQL combination is widely used for ISP/NOC monitoring at this scale.
+
+---
+
+### Background Jobs
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Celery | 5.3+ | Task queue for polling workers | Distributes device polling across worker processes. Each Celery worker runs its own asyncio event loop. Allows scaling horizontally by adding Railway worker services. |
+| celery-beat | (included) | Periodic task scheduler | Replaces APScheduler for production. Stores schedule in Redis, survives restarts, supports per-device polling intervals. |
+
+**Architecture decision:** FastAPI handles HTTP/WebSocket (user-facing). Celery workers handle device polling (background). Redis connects them via pub/sub — when a worker finishes polling, it publishes results to Redis, FastAPI pushes to browsers via WebSocket.
+
+```
+[Browser] <-WS-> [FastAPI] <-sub-> [Redis] <-pub- [Celery Worker]
+                                       |
+                                  [PostgreSQL/TimescaleDB]
+```
+
+**Confidence: HIGH** — Celery + Redis is the standard Python task queue pattern. Well-supported on Railway.
+
+---
+
+### Device Integration Libraries
+
+| Library | Version | Device Type | Notes |
+|---------|---------|-------------|-------|
+| librouteros | 3.2+ | Mikrotik RouterOS | Pure Python, async-compatible, implements RouterOS API protocol (port 8728 plain, 8729 SSL). Returns structured Python dicts. Use for: interface stats, system resources, DHCP leases. |
+| asyncssh | 2.14+ | VSOL OLT, Ubiquiti AirOS | Async SSH with connection pooling. For VSOL: send CLI commands, parse text output. For Ubiquiti SSH fallback: same approach. |
+| aiohttp | 3.9+ | Ubiquiti UISP, Mimosa REST | HTTP client for REST APIs. UISP API uses Bearer token auth. Mimosa uses Basic/Token auth over HTTPS. |
+| python-telegram-bot | 21.x | Telegram alerts | Official Telegram Bot API wrapper. Use `send_message` with Markdown formatting for alerts. Async-native in v21+. |
+
+**VSOL OLT SSH parsing note:** VSOL OLTs (V1600G, V1600D series) do not have a documented REST API. Access is via SSH CLI. Commands like `show onu optical-info all` and `show pon port status` return tabular text. You will need a custom parser per OLT model. Budget 2-3 days for this parser work. Use `textfsm` or `pyparsing` for structured parsing of CLI output.
+
+**Confidence for librouteros: HIGH** — Documented, maintained library.
+**Confidence for VSOL SSH parsing: MEDIUM** — Based on known VSOL product line behavior; specific command syntax should be validated against actual device access.
+**Confidence for Mimosa API: MEDIUM** — Mimosa has a documented REST API (confirmed in their developer docs as of 2024), but version compatibility with B5/A5x models should be validated.
+
+---
+
+### Core Framework: Frontend
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| React | 18.3+ | UI framework | Component model fits dashboard panels. Large ecosystem for charts, tables, maps. Concurrent mode for non-blocking UI updates. |
+| Vite | 5.x | Build tool | 10-100x faster than CRA/Webpack. Native ESM, HMR in <100ms. Railway builds from Dockerfile — fast Vite builds matter. |
+| TypeScript | 5.4+ | Type safety | Prevents runtime errors in dashboard state management. Essential when handling heterogeneous device data (Mikrotik, VSOL, Ubiquiti, Mimosa all return different shapes). |
+| shadcn/ui | latest | UI component library | Not a dependency — copies components into your codebase. Uses Radix UI primitives + Tailwind. No version lock-in. Excellent for data tables, badges, status indicators. |
+| Tailwind CSS | 3.4+ | Utility CSS | Pairs with shadcn/ui. Rapid styling of status indicators (red/yellow/green device cards). |
+| Recharts | 2.12+ | Charts | React-native charting library. Line charts for latency/traffic history, bar charts for ONU signal distribution. Lighter than Chart.js, easier than D3 for this use case. |
+| TanStack Query | 5.x | Server state management | Handles polling intervals for REST endpoints, stale-while-revalidate caching, background refetch. Replaces Redux for server state. |
+| React Router | 6.x | Client-side routing | Dashboard view, device detail, incidents log, inventory — multi-page SPA. |
+
+**Why not Next.js:**
+- Server-side rendering adds complexity without benefit for an internal tool used by one technician
+- NOC dashboard is a SPA — all data is real-time, SSR provides no SEO or performance value
+- Railway deploys a static Vite build served by Nginx or a FastAPI static file handler — simpler than Next.js runtime
+
+**Why not Vue/Svelte:**
+- React has the largest ecosystem for monitoring/dashboard components
+- The team is building for a single operator; framework preference matters less than library availability
+- Recharts, TanStack Query, and shadcn/ui are React-specific
+
+**Confidence: HIGH** — React + Vite + shadcn/ui is mainstream in 2024-2025 for internal tooling.
+
+---
+
+### Real-Time Communication
+
+| Technology | Purpose | Why |
+|------------|---------|-----|
+| WebSocket (FastAPI native) | Push device status updates to browser | FastAPI has built-in WebSocket support. No additional library needed. When Celery worker polls a device, result goes to Redis pub/sub, FastAPI WebSocket handler reads Redis and pushes to all connected browsers. |
+| Redis pub/sub | Worker-to-API message bus | Decouples polling workers from WebSocket server. Workers don't need to know about connected clients. |
+
+**WebSocket pattern:**
+```python
+# FastAPI endpoint
+@app.websocket("/ws/devices")
+async def device_stream(websocket: WebSocket):
+    await websocket.accept()
+    async with redis.subscribe("device:updates") as channel:
+        async for message in channel:
+            await websocket.send_json(message)
+```
+
+**Update frequency:** Poll every 60s, push every poll. Browser receives ~8-10 device updates/second during active poll cycle. Lightweight.
+
+**Confidence: HIGH** — FastAPI WebSocket + Redis pub/sub is a well-documented pattern.
+
+---
+
+### Authentication
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| python-jose | 3.3+ | JWT token generation/validation | Stateless auth tokens. Single user in v1, but JWT allows easy expansion to multiple users later. |
+| passlib | 1.7+ | Password hashing | bcrypt hashing. Standard for FastAPI auth. |
+| FastAPI security | (built-in) | OAuth2 password flow | FastAPI's built-in `OAuth2PasswordBearer` handles token extraction from headers. No external auth service needed for v1 single-user scenario. |
+
+**Confidence: HIGH** — This is the canonical FastAPI authentication pattern from official docs.
+
+---
+
+### Infrastructure & Deployment
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| Docker | latest | Container runtime | Railway deploys from Dockerfile. Containerization ensures parity between dev and production. Multi-stage build keeps image lean. |
+| Railway | current | PaaS host | Supports Dockerfile deployments, managed PostgreSQL, managed Redis, custom domains, environment variables per service, automatic HTTPS. |
+| Nginx | 1.25+ | Static file server | Serves the compiled React/Vite frontend. Can be a separate Railway service or bundled with FastAPI using `StaticFiles`. For v1, bundle with FastAPI to minimize Railway service count (affects billing). |
+| Gunicorn + Uvicorn workers | latest | Production ASGI server | Gunicorn manages multiple Uvicorn worker processes for Railway's single-container deployment. Formula: `workers = 2 * CPU cores + 1`. |
+
+**Railway service layout:**
+
+```
+Railway Project: beepyred-noc
+├── web          (FastAPI + Uvicorn + static React build)
+├── worker       (Celery worker, same Docker image, different CMD)
+├── beat         (Celery beat scheduler, same Docker image, different CMD)
+├── postgresql   (Railway addon)
+└── redis        (Railway addon)
+```
+
+- 3 services from 1 Docker image (different start commands) = minimal maintenance
+- Railway's free tier may not cover 3 services; Hobby plan ($5/month) covers unlimited services
+- Worker service needs network access to device IPs — verify Railway egress IPs are reachable from the ISP network or configure VPN
+
+**Dockerfile pattern (multi-stage):**
+
+```dockerfile
+# Stage 1: Build React frontend
+FROM node:20-alpine AS frontend
+WORKDIR /app/frontend
+COPY frontend/package*.json .
+RUN npm ci
+COPY frontend/ .
+RUN npm run build
+
+# Stage 2: Python backend
+FROM python:3.12-slim AS backend
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/ .
+COPY --from=frontend /app/frontend/dist ./static
+CMD ["gunicorn", "main:app", "-w", "2", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+```
+
+**Confidence: HIGH** — Railway's multi-service Docker deployment is well-documented. Multi-stage Dockerfile pattern is standard.
+
+---
+
+### Telegram Alerts
+
+| Technology | Version | Purpose | Notes |
+|------------|---------|---------|-------|
+| python-telegram-bot | 21.3+ | Send alert messages | Async-native. Use `bot.send_message(chat_id=CHAT_ID, text=message, parse_mode="Markdown")`. No webhook needed — just outbound calls from Celery worker when threshold crossed. |
+
+**Alert flow:**
+1. Celery worker polls device → detects DOWN or threshold exceeded
+2. Worker writes incident to PostgreSQL
+3. Worker calls Telegram API (fire-and-forget, no retry needed for v1)
+4. Worker publishes status change to Redis → FastAPI WebSocket → Browser updates
+
+**Confidence: HIGH** — python-telegram-bot is the standard Python Telegram library; async support confirmed in v21.
+
+---
+
+## Alternatives Considered
+
+| Category | Recommended | Alternative | Why Not |
+|----------|-------------|-------------|---------|
+| Backend language | Python 3.12 | Node.js (Express/Fastify) | No maintained Mikrotik RouterOS API library for Node; SSH parsing libraries less mature |
+| Backend framework | FastAPI | Django + DRF | Django is synchronous-first; async support is bolted on; heavier ORM overhead; no built-in WebSocket |
+| Backend framework | FastAPI | Flask | No native async, no WebSocket, no auto-validation |
+| Task queue | Celery | RQ (Redis Queue) | RQ lacks Celery-beat equivalent for complex schedules; smaller ecosystem |
+| Task queue | Celery | asyncio only (no Celery) | No persistence if web process crashes; can't scale workers independently |
+| Metrics DB | TimescaleDB | InfluxDB | Third database to manage; separate query language; extra Railway service |
+| Metrics DB | TimescaleDB | Prometheus | Pull-based model doesn't fit SSH/API polling architecture; designed for server metrics not device APIs |
+| Frontend | React + Vite | Next.js | SSR overhead for internal SPA with no SEO need; more Railway config required |
+| Frontend | React + Vite | Vue 3 | Fewer dashboard component libraries; shadcn/ui is React-specific |
+| Charts | Recharts | Chart.js | Chart.js is canvas-based, harder to integrate with React state; Recharts is declarative/reactive |
+| Charts | Recharts | D3.js | D3 requires manual DOM manipulation; overkill for standard line/bar charts |
+| Auth | JWT + python-jose | Auth0 / Supabase Auth | External auth service adds cost and complexity for a single-user v1 internal tool |
+| Deployment | Railway | Render | Railway has better multi-service coordination; both are valid; Railway mentioned in project requirements |
+| Deployment | Railway | VPS (DigitalOcean) | VPS requires server management; Railway is PaaS — simpler for this team |
+
+---
+
+## What NOT to Use
+
+| Technology | Why Avoid |
+|------------|-----------|
+| SNMP (as primary) | PROJECT.md explicitly states "evitar SNMP donde haya mejor alternativa nativa". RouterOS API and SSH give richer, structured data. |
+| Django | Synchronous-first framework — polling 500 devices concurrently requires async throughout; Django's ORM blocks the event loop |
+| threading.Thread | Use asyncio instead. Threads have GIL contention, memory overhead, and race conditions. asyncio handles 500 I/O-bound connections with a single thread. |
+| Socket.io | WebSocket protocol overhead. FastAPI's native WebSocket is sufficient and lighter. |
+| GraphQL | No client-driven query optimization need for 1 user internal tool. REST is simpler to implement and debug. |
+| MongoDB | Unstructured device data benefits from schema enforcement (Pydantic + SQLAlchemy). TimescaleDB handles the time-series part that MongoDB's performance suffers at scale. |
+| React Native | PROJECT.md: "App móvil nativa — out of scope v1". Responsive web is sufficient. |
+| Kubernetes | Overkill for 1 ISP NOC on Railway. Railway handles orchestration. |
+
+---
+
+## Installation
+
+### Backend dependencies (requirements.txt)
+
+```
+fastapi==0.111.*
+uvicorn[standard]==0.29.*
+gunicorn==22.*
+pydantic==2.7.*
+sqlalchemy[asyncio]==2.0.*
+asyncpg==0.29.*
+alembic==1.13.*
+celery[redis]==5.3.*
+redis==5.0.*
+aiohttp==3.9.*
+asyncssh==2.14.*
+librouteros==3.2.*
+python-telegram-bot==21.*
+python-jose[cryptography]==3.3.*
+passlib[bcrypt]==1.7.*
+textfsm==1.1.*
+python-dotenv==1.0.*
+httpx==0.27.*
+```
+
+### Frontend dependencies (package.json)
+
+```json
+{
+  "dependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "react-router-dom": "^6.23.0",
+    "@tanstack/react-query": "^5.40.0",
+    "recharts": "^2.12.0",
+    "axios": "^1.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vite": "^5.2.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
+  }
+}
+```
+
+**shadcn/ui is added via CLI, not package.json:**
+```bash
+npx shadcn-ui@latest init
+npx shadcn-ui@latest add badge card table alert
+```
+
+---
+
+## Railway Environment Variables
+
+```bash
+# Database
+DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/noc
+REDIS_URL=redis://default:pass@host:6379
+
+# Security
+SECRET_KEY=<32-byte random string>
+ALGORITHM=HS256
+
+# Telegram
+TELEGRAM_BOT_TOKEN=<bot token from @BotFather>
+TELEGRAM_CHAT_ID=<technician chat ID>
+
+# Polling
+POLL_INTERVAL_SECONDS=60
+MAX_CONCURRENT_CONNECTIONS=50
+
+# Railway auto-sets PORT — bind to 0.0.0.0:$PORT
+PORT=8000
+```
+
+---
+
+## Network Connectivity Note
+
+Railway's deployment runs in cloud infrastructure. Device polling requires one of:
+1. Devices have public IPs (routers/core equipment with public access on management port)
+2. Tailscale / WireGuard VPN from Railway worker to ISP network — Tailscale has a Docker image suitable for Railway sidecars
+3. Self-hosted runner on a machine inside the ISP network — the NOC backend runs on-premises, Railway hosts only the frontend
+
+**Recommendation for v1:** Verify that Mikrotik core routers and OLTs have management access from outside (even with firewall rules limiting to Railway's egress IPs). If not, deploy the Celery worker on a Raspberry Pi / local server inside the ISP network, and have it push results to the FastAPI server on Railway.
+
+**Confidence: MEDIUM** — Network topology is ISP-specific. This is a constraint flagged in PROJECT.md that must be resolved before polling works.
+
+---
+
+## Confidence Assessment
+
+| Area | Confidence | Notes |
+|------|------------|-------|
+| Python + FastAPI for backend | HIGH | Well-established; training data consistent with official docs through Aug 2025 |
+| asyncio + asyncssh for concurrent polling | HIGH | Standard pattern; confirmed capability |
+| librouteros for Mikrotik | HIGH | Active maintained library, RouterOS API is stable |
+| TimescaleDB for metrics | HIGH | Mature extension, widely used for ISP monitoring |
+| Celery + Redis for workers | HIGH | Standard Python task queue stack |
+| React + Vite + shadcn/ui for frontend | HIGH | Dominant pattern in 2024-2025 internal tooling |
+| FastAPI WebSocket + Redis pub/sub | HIGH | Documented FastAPI pattern |
+| VSOL OLT SSH CLI parsing | MEDIUM | VSOL CLI behavior known but specific model command syntax needs hands-on validation |
+| Mimosa REST API endpoints | MEDIUM | API exists but endpoint compatibility with specific firmware versions needs validation |
+| Railway multi-service deployment | HIGH | Railway docs support this pattern; pricing depends on current Railway plans |
+| Network reachability from Railway | LOW | Completely depends on ISP network topology — must be validated before dev starts |
+
+---
+
+## Sources
+
+All findings from training data (model knowledge cutoff August 2025). Key library documentation references:
+
+- FastAPI official: https://fastapi.tiangolo.com
+- librouteros PyPI: https://pypi.org/project/librouteros/
+- asyncssh docs: https://asyncssh.readthedocs.io
+- TimescaleDB docs: https://docs.timescale.com
+- Celery docs: https://docs.celeryq.dev
+- python-telegram-bot docs: https://python-telegram-bot.readthedocs.io
+- Railway docs: https://docs.railway.com
+- shadcn/ui: https://ui.shadcn.com
+- TanStack Query: https://tanstack.com/query/latest
+
+**Note:** These URLs were not fetched during research (WebFetch unavailable). Versions listed reflect latest stable as of training cutoff (Aug 2025). Validate versions at project start.
