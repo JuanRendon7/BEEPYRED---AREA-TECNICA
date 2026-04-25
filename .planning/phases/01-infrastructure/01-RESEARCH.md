@@ -906,32 +906,22 @@ Esta es una fase de infraestructura nueva (greenfield) — no hay renombrados ni
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **¿Librouteros, asyncssh, y aiohttp soportan SOCKS5 proxy?**
-   - What we know: Tailscale userspace expone SOCKS5 en localhost:1055; `ALL_PROXY` solo funciona si las librerías lo respetan
-   - What's unclear: Compatibilidad específica de cada librería de red con SOCKS5
-   - Recommendation: Crear un test de conectividad en Phase 2 antes de asumir que Tailscale userspace funciona para todos los colectores
+   - **Deferred to Phase 2** — test de conectividad SOCKS5 incluido en plan de Phase 2 antes de asumir compatibilidad completa.
 
 2. **¿El Mikrotik de BEEPYRED tiene IP pública fija disponible?**
-   - What we know: La decisión locked asume IP pública en el Mikrotik core
-   - What's unclear: Si realmente tiene IP pública o está detrás de CGNAT
-   - Recommendation: Confirmar con el técnico de BEEPYRED antes de iniciar el deploy
+   - **RESOLVED** — El técnico confirmó que hay un Mikrotik con IP pública fija. Actúa como Tailscale subnet router.
 
 3. **¿Usar Tailscale SaaS o Headscale self-hosted como coordinador VPN?**
-   - What we know: Tailscale SaaS requiere cuenta; tiene tier gratuito para proyectos personales
-   - What's unclear: Si BEEPYRED tiene restricciones sobre servicios de terceros
-   - Recommendation: Tailscale SaaS para empezar (menor complejidad); migrar a Headscale si surge necesidad
+   - **RESOLVED** — Tailscale SaaS confirmado por el técnico (CONTEXT.md 2026-04-25). No se usa Headscale.
 
 4. **¿TimescaleDB disponible en el addon PostgreSQL de Railway?**
-   - What we know: Railway tiene un template de TimescaleDB separado (imagen `timescale/timescaledb:2.18.0-pg16`); el addon PostgreSQL estándar puede NO incluir TimescaleDB
-   - What's unclear: Si el addon PostgreSQL managed standard de Railway trae TimescaleDB, o si hay que usar el template/imagen separada
-   - Recommendation: Si el addon standard no incluye TimescaleDB, usar PostgreSQL vanilla con particionamiento por tiempo o crear la tabla `metrics` como tabla regular con índice en `recorded_at` y Celery beat para limpieza — suficiente para v1
+   - **RESOLVED** — No se usa TimescaleDB. PostgreSQL puro con BRIN index en `recorded_at` confirmado por el técnico (CONTEXT.md 2026-04-25).
 
 5. **¿Correr Alembic migrations en startup del contenedor o como paso separado?**
-   - What we know: Correr migrations en startup tiene riesgo de race condition si múltiples instancias arrancan simultáneamente
-   - What's unclear: Railway tiene algún mecanismo de "run once before deploy"?
-   - Recommendation: Usar Railway's "Deploy Command" o un custom entrypoint script que corra `alembic upgrade head` antes de iniciar gunicorn, con un lock de Alembic que previene ejecución simultánea
+   - **RESOLVED** — Alembic migrations se ejecutan como Railway pre-deploy command (no en startup del contenedor). Documentado en railway.toml como instrucción de operador.
 
 ---
 
