@@ -26,12 +26,16 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Depends on**: Nothing (first phase)
 **Requirements**: INFRA-01, INFRA-02, INFRA-03, DEPLOY-01, DEPLOY-02, DEPLOY-03
 **Success Criteria** (what must be TRUE):
-  1. El worker en Railway puede hacer ping a un equipo de la red privada del ISP (valida el tunel VPN WireGuard)
-  2. La base de datos PostgreSQL externa existe con el schema inicial (devices, metrics, alerts, incidents, onus) y no usa almacenamiento local efimero
+  1. El worker en Railway puede hacer ping a un equipo de la red privada del ISP (valida el tunel VPN — Tailscale userspace en lugar de WireGuard kernel, que es imposible en Railway)
+  2. La base de datos PostgreSQL externa existe con el schema inicial (devices, device_credentials, metrics, alerts, incidents, onus) y no usa almacenamiento local efimero
   3. Los servicios web, worker y beat se despliegan en Railway desde el mismo Dockerfile sin errores
   4. Todas las credenciales (DB, Redis, VPN, Telegram) son variables de entorno — ninguna esta hardcodeada en el codigo ni en el repositorio
   5. Las credenciales de equipos de red almacenadas en DB estan encriptadas con Fernet, no en texto plano
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Scaffold del monorepo, Dockerfile multi-stage (Tailscale worker), pydantic-settings config, railway.toml
+- [ ] 01-02-PLAN.md — Modelos SQLAlchemy, Alembic async setup, migracion inicial, Fernet security, tests unitarios
 
 ### Phase 2: Foundation
 **Goal**: El tecnico puede iniciar sesion, registrar equipos en el inventario, y ver en tiempo real cuales estan UP y cuales DOWN — sin necesidad de metricas ricas, solo ICMP ping
@@ -101,7 +105,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infrastructure | 0/TBD | Not started | - |
+| 1. Infrastructure | 0/2 | Planned | - |
 | 2. Foundation | 0/TBD | Not started | - |
 | 3. Mikrotik + Alertas + Incidentes | 0/TBD | Not started | - |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
