@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Scaffold del monorepo, Dockerfile multi-stage (Tailscale worker), pydantic-settings config, railway.toml
-- [ ] 01-02-PLAN.md — Modelos SQLAlchemy, Alembic async setup, migracion inicial, Fernet security, tests unitarios
+- [x] 01-02-PLAN.md — Modelos SQLAlchemy, Alembic async setup, migracion inicial, Fernet security, tests unitarios
 
 ### Phase 2: Foundation
 **Goal**: El tecnico puede iniciar sesion, registrar equipos en el inventario, y ver en tiempo real cuales estan UP y cuales DOWN — sin necesidad de metricas ricas, solo ICMP ping

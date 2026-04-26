@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md — scaffold monorepo, Dockerfile multi-stage, pydantic-settings config, railway.toml
-last_updated: "2026-04-26T18:54:40.679Z"
-last_activity: 2026-04-26 -- Plan 01-01 complete (scaffold + config)
+stopped_at: Completed 01-02-PLAN.md — models, Alembic async, Fernet security, 10 unit tests
+last_updated: "2026-04-26T19:03:06.921Z"
+last_activity: 2026-04-26
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -26,9 +26,9 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 ## Current Position
 
 Phase: 1 of 6 (Infrastructure)
-Plan: 1 of 2 in current phase
-Status: Executing
-Last activity: 2026-04-26 -- Plan 01-01 complete (scaffold + config)
+Plan: 2 of 2 in current phase
+Status: Ready to execute
+Last activity: 2026-04-26
 
 Progress: [█░░░░░░░░░] 50%
 
@@ -52,6 +52,7 @@ Progress: [█░░░░░░░░░] 50%
 - Trend: -
 
 *Updated after each plan completion*
+| Phase 01-infrastructure P02 | 25m | 2 tasks | 18 files |
 
 ## Accumulated Context
 
@@ -64,6 +65,9 @@ Recent decisions affecting current work:
 - [Pre-Phase 1]: PostgreSQL managed Railway addon desde el dia 1 — nunca SQLite ni almacenamiento local
 - [Research]: VSOL OLT SSH requiere validacion hands-on contra hardware real antes de escribir parsers — presupuestar 2-3 dias en Phase 4
 - [Research]: Confirmar si BEEPYRED tiene UISP/UNMS activo antes de Phase 5 — cambia drasticamente el esfuerzo de integracion Ubiquiti
+- [Phase 01-02]: PostgreSQL pure (no TimescaleDB) — metrics.recorded_at uses BRIN index instead of TimescaleDB hypertable
+- [Phase 01-02]: Alembic migrations run as Railway pre-deploy command (not container startup) — prevents blocking FastAPI boot
+- [Phase 01-02]: FERNET_KEY is SecretStr — .get_secret_value() used in security.py, never logged or str()-cast
 
 ### Pending Todos
 
@@ -77,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-26
-Stopped at: Completed 01-01-PLAN.md — scaffold monorepo, Dockerfile multi-stage, pydantic-settings config, railway.toml
+Last session: 2026-04-26T19:03:06.917Z
+Stopped at: Completed 01-02-PLAN.md — models, Alembic async, Fernet security, 10 unit tests
 Resume file: None
