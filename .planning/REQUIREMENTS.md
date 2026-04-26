@@ -10,9 +10,9 @@
 
 ### INFRA — Infraestructura y Conectividad
 
-- [ ] **INFRA-01**: El sistema establece túnel VPN WireGuard desde Railway a la red privada del ISP para alcanzar los equipos de red
+- [x] **INFRA-01**: El sistema establece túnel VPN WireGuard desde Railway a la red privada del ISP para alcanzar los equipos de red
 - [ ] **INFRA-02**: Base de datos PostgreSQL externo (Railway managed) configurada desde el inicio — sin almacenamiento local efímero
-- [ ] **INFRA-03**: Variables de entorno para todas las credenciales (ninguna credencial hardcodeada en el código)
+- [x] **INFRA-03**: Variables de entorno para todas las credenciales (ninguna credencial hardcodeada en el código)
 
 ### AUTH — Autenticación
 
@@ -88,8 +88,8 @@
 
 ### DEPLOY — Deploy y Operaciones
 
-- [ ] **DEPLOY-01**: La aplicación corre en Railway con dos servicios: web (FastAPI) y worker (Celery)
-- [ ] **DEPLOY-02**: El dominio personalizado de BEEPYRED apunta a la instancia en Railway
+- [x] **DEPLOY-01**: La aplicación corre en Railway con dos servicios: web (FastAPI) y worker (Celery)
+- [x] **DEPLOY-02**: El dominio personalizado de BEEPYRED apunta a la instancia en Railway
 - [ ] **DEPLOY-03**: Las credenciales de equipos (usuario/contraseña SSH, API keys) están encriptadas en base de datos, no en texto plano
 
 ---
@@ -119,11 +119,11 @@
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| INFRA-01 | Phase 1: Infrastructure | Pending |
+| INFRA-01 | Phase 1: Infrastructure | Complete |
 | INFRA-02 | Phase 1: Infrastructure | Pending |
-| INFRA-03 | Phase 1: Infrastructure | Pending |
-| DEPLOY-01 | Phase 1: Infrastructure | Pending |
-| DEPLOY-02 | Phase 6: Dashboard Completo | Pending |
+| INFRA-03 | Phase 1: Infrastructure | Complete |
+| DEPLOY-01 | Phase 1: Infrastructure | Complete |
+| DEPLOY-02 | Phase 6: Dashboard Completo | Complete |
 | DEPLOY-03 | Phase 1: Infrastructure | Pending |
 | AUTH-01 | Phase 2: Foundation | Pending |
 | AUTH-02 | Phase 2: Foundation | Pending |

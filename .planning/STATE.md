@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Roadmap creado — 6 fases, 38 requisitos mapeados al 100%. Listo para planificar Phase 1.
-last_updated: "2026-04-25T15:57:02.261Z"
-last_activity: 2026-04-25 -- Phase 1 planning complete
+stopped_at: Completed 01-01-PLAN.md — scaffold monorepo, Dockerfile multi-stage, pydantic-settings config, railway.toml
+last_updated: "2026-04-26T18:54:40.679Z"
+last_activity: 2026-04-26 -- Plan 01-01 complete (scaffold + config)
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 2
-  completed_plans: 0
-  percent: 0
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 ## Current Position
 
 Phase: 1 of 6 (Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to execute
-Last activity: 2026-04-25 -- Phase 1 planning complete
+Plan: 1 of 2 in current phase
+Status: Executing
+Last activity: 2026-04-26 -- Plan 01-01 complete (scaffold + config)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 50%
 
 ## Performance Metrics
 
@@ -60,7 +60,7 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Pre-Phase 1]: VPN WireGuard desde Railway a Mikrotik core es el mecanismo de conectividad — confirmar con el tecnico antes de comenzar Phase 1
+- [01-01]: Tailscale SaaS userspace (--tun=userspace-networking) confirmed as VPN — Railway blocks NET_ADMIN making kernel WireGuard impossible; SOCKS5 proxy at localhost:1055
 - [Pre-Phase 1]: PostgreSQL managed Railway addon desde el dia 1 — nunca SQLite ni almacenamiento local
 - [Research]: VSOL OLT SSH requiere validacion hands-on contra hardware real antes de escribir parsers — presupuestar 2-3 dias en Phase 4
 - [Research]: Confirmar si BEEPYRED tiene UISP/UNMS activo antes de Phase 5 — cambia drasticamente el esfuerzo de integracion Ubiquiti
@@ -71,12 +71,12 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 1 blocker]: Confirmar topologia de red del ISP — como Railway alcanzara los equipos privados (VPN WireGuard, IP publica con firewall, o agente local on-premises)
+- [Phase 2 validation]: Confirm librouteros, asyncssh, aiohttp respect ALL_PROXY when connecting to ISP devices via Tailscale SOCKS5
 - [Phase 4 risk]: Comandos CLI SSH de OLTs VSOL varian por modelo (V1600D, V1600G, V1800) y firmware — requiere sesion hands-on antes de implementar parsers
 - [Phase 5 risk]: Autenticacion Mimosa por cookie debe validarse contra modelos y firmware especificos de BEEPYRED en produccion
 
 ## Session Continuity
 
-Last session: 2026-04-25
-Stopped at: Roadmap creado — 6 fases, 38 requisitos mapeados al 100%. Listo para planificar Phase 1.
+Last session: 2026-04-26
+Stopped at: Completed 01-01-PLAN.md — scaffold monorepo, Dockerfile multi-stage, pydantic-settings config, railway.toml
 Resume file: None
