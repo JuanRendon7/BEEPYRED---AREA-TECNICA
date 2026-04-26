@@ -1,0 +1,25 @@
+# railway.toml — configura el servicio "web" de BEEPYRED NOC
+# Los servicios "worker" y "beat" usan el mismo Dockerfile con distinto startCommand
+# en el Railway dashboard (campo "Start Command" de cada servicio).
+#
+# Start commands por servicio (copiar al crear en Railway dashboard):
+#   web:    gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+#   worker: /start-worker.sh  (Tailscale userspace + Celery worker, ver Dockerfile stage worker)
+#   beat:   celery -A app.celery_app beat --loglevel=info --scheduler celery.beat:PersistentScheduler
+#
+# Migraciones Alembic: ejecutar como Railway pre-deploy command:
+#   cd backend && alembic upgrade head
+# (NO en el startup del contenedor web — puede fallar si la DB no esta lista)
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+# Para el servicio web usar el stage "web" del Dockerfile multi-stage
+buildTarget = "web"
+
+[deploy]
+startCommand = "gunicorn app.main:app -w 2 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
