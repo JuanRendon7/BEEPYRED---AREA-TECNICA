@@ -47,8 +47,13 @@ Plans:
   3. El sistema ejecuta ICMP ping a todos los equipos del inventario cada 60 segundos con concurrencia limitada a 50 simultaneos y timeout individual por equipo
   4. Un equipo aparece como DOWN en pantalla solo despues de 3 polls consecutivos fallidos (no en el primer timeout)
   5. El estado UP/DOWN de cada equipo se actualiza en el dashboard sin recargar la pagina (Server-Sent Events)
-**Plans**: TBD
-**UI hint**: yes
+**Plans**: 4 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Auth backend: PyJWT + pwdlib/Argon2, modelo User, migracion 002, seed_admin, tests AUTH-01/02/03
+- [ ] 02-02-PLAN.md — Inventario backend: schemas Pydantic, CRUD /devices con filtro por sitio, tests INV-01/02/03/04
+- [ ] 02-03-PLAN.md — ICMP polling worker: ping_host + asyncio.Semaphore + consecutive_failures + Redis pub/sub, Celery beat 60s
+- [ ] 02-04-PLAN.md — SSE endpoint /events + frontend React (Vite + shadcn/ui + login + dashboard + inventory CRUD)
 
 ### Phase 3: Mikrotik + Alertas + Incidentes
 **Goal**: El tecnico recibe alertas en Telegram cuando un equipo cae o se recupera, ve metricas CPU/RAM/trafico de los Mikrotik, y puede consultar el historial de incidentes
@@ -105,8 +110,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infrastructure | 0/2 | Planned | - |
-| 2. Foundation | 0/TBD | Not started | - |
+| 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
+| 2. Foundation | 0/4 | Planned | - |
 | 3. Mikrotik + Alertas + Incidentes | 0/TBD | Not started | - |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
