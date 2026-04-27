@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Completed 02-03-PLAN.md — ICMP polling worker, Celery beat schedule, 11 unit tests
-last_updated: "2026-04-27T03:04:34.307Z"
+status: verifying
+stopped_at: Completed 02-04-PLAN.md — SSE endpoint FastAPI, React frontend completo con login/dashboard/inventory
+last_updated: "2026-04-27T03:13:26.786Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 5
-  percent: 83
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 
 Phase: 02 (Foundation) — EXECUTING
 Plan: 4 of 4
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-27
 
 Progress: [█░░░░░░░░░] 50%
@@ -56,6 +56,7 @@ Progress: [█░░░░░░░░░] 50%
 | Phase 02-foundation P01 | 5m | 2 tasks | 12 files |
 | Phase 02-foundation P02 | 2m | 2 tasks | 5 files |
 | Phase 02-foundation P03 | 162 | 2 tasks | 3 files |
+| Phase 02-foundation P04 | 45m | 3 tasks | 20 files |
 
 ## Accumulated Context
 
@@ -80,6 +81,8 @@ Recent decisions affecting current work:
 - [Phase 02-02]: GET /devices?active_only=true por defecto — oculta equipos eliminados del listado
 - [Phase 02-foundation]: asyncio.run() en Celery task (no loop.run_until_complete deprecated); subprocess ping -c 1 no requiere NET_RAW en Railway
 - [Phase 02-foundation]: consecutive_failures en columna DB, publish_status_update solo en cambio de estado
+- [Phase 02-foundation]: shadcn v4 usa @base-ui/react — API de primitivos diferente a @radix-ui pero variantes CSS compatibles con el plan
+- [Phase 02-foundation]: EventSource + JWT: token en query param ?token=... es la solucion v1 aceptada (T-2-30); frontend/dist/ excluido de git — Railway hace build en deploy
 
 ### Pending Todos
 
@@ -93,6 +96,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-27T03:04:34.304Z
-Stopped at: Completed 02-03-PLAN.md — ICMP polling worker, Celery beat schedule, 11 unit tests
+Last session: 2026-04-27T03:13:26.781Z
+Stopped at: Completed 02-04-PLAN.md — SSE endpoint FastAPI, React frontend completo con login/dashboard/inventory
 Resume file: None

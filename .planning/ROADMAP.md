@@ -13,7 +13,7 @@ El proyecto construye de adentro hacia afuera: primero la infraestructura que co
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Infrastructure** - VPN, PostgreSQL schema, Railway multi-service, variables de entorno
-- [ ] **Phase 2: Foundation** - Auth, inventario de equipos, polling ICMP, SSE dashboard basico
+- [x] **Phase 2: Foundation** - Auth, inventario de equipos, polling ICMP, SSE dashboard basico (completed 2026-04-27)
 - [ ] **Phase 3: Mikrotik + Alertas + Incidentes** - RouterOS API collector, motor de alertas Telegram con debounce, historial de incidentes
 - [ ] **Phase 4: VSOL OLT Collector** - SSH/CLI parsing para OLTs VSOL GPON y EPON, estado y señal de ONUs
 - [ ] **Phase 5: Ubiquiti y Mimosa Collectors** - UISP REST API y Mimosa REST API, metricas de radioenlaces
@@ -53,7 +53,7 @@ Plans:
 - [x] 02-01-PLAN.md — Auth backend: PyJWT + pwdlib/Argon2, modelo User, migracion 002, seed_admin, tests AUTH-01/02/03
 - [x] 02-02-PLAN.md — Inventario backend: schemas Pydantic, CRUD /devices con filtro por sitio, tests INV-01/02/03/04
 - [x] 02-03-PLAN.md — ICMP polling worker: ping_host + asyncio.Semaphore + consecutive_failures + Redis pub/sub, Celery beat 60s
-- [ ] 02-04-PLAN.md — SSE endpoint /events + frontend React (Vite + shadcn/ui + login + dashboard + inventory CRUD)
+- [x] 02-04-PLAN.md — SSE endpoint /events + frontend React (Vite + shadcn/ui + login + dashboard + inventory CRUD)
 
 ### Phase 3: Mikrotik + Alertas + Incidentes
 **Goal**: El tecnico recibe alertas en Telegram cuando un equipo cae o se recupera, ve metricas CPU/RAM/trafico de los Mikrotik, y puede consultar el historial de incidentes
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
-| 2. Foundation | 3/4 | In Progress|  |
+| 2. Foundation | 4/4 | Complete   | 2026-04-27 |
 | 3. Mikrotik + Alertas + Incidentes | 0/TBD | Not started | - |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
