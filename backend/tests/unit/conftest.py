@@ -29,3 +29,31 @@ def set_test_env_vars(monkeypatch):
 def fernet_key() -> str:
     """Key Fernet valida para tests de security.py."""
     return TEST_FERNET_KEY
+
+
+# -- Fixtures de auth (Phase 2) --------------------------------------------------
+TEST_ADMIN_USERNAME = "admin_test"
+TEST_ADMIN_PASSWORD = "TestPassword123!"
+
+
+@pytest.fixture
+def admin_username() -> str:
+    return TEST_ADMIN_USERNAME
+
+
+@pytest.fixture
+def admin_password() -> str:
+    return TEST_ADMIN_PASSWORD
+
+
+@pytest.fixture
+def valid_token(set_test_env_vars) -> str:
+    """JWT valido firmado con TEST_SECRET_KEY para tests."""
+    from app.core.auth import create_access_token
+    return create_access_token(TEST_ADMIN_USERNAME)
+
+
+@pytest.fixture
+def auth_headers(valid_token) -> dict:
+    """Headers HTTP con Bearer token para tests de endpoints protegidos."""
+    return {"Authorization": f"Bearer {valid_token}"}

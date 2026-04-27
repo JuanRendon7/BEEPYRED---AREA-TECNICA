@@ -60,6 +60,14 @@ class Settings(BaseSettings):
     ONU_SIGNAL_MIN_DBM: float = -28.0
     CONSECUTIVE_FAILURES_THRESHOLD: int = 3
 
+    # -- Auth (Phase 2) --------------------------------------------------------------
+    # Duracion del JWT. 1440 = 24 horas. El tecnico no hace login todos los dias.
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    # Usuario admin inicial — creado por scripts/seed_admin.py en pre-deploy
+    ADMIN_USERNAME: str = "admin"
+    # SecretStr con default "changeme" — seed_admin.py valida que no sea "changeme" en produccion
+    ADMIN_PASSWORD: SecretStr = SecretStr("changeme")
+
     # -- Railway auto-sets PORT ------------------------------------------------------
     PORT: int = 8000
 
