@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [ ] **Phase 1: Infrastructure** - VPN, PostgreSQL schema, Railway multi-service, variables de entorno
 - [x] **Phase 2: Foundation** - Auth, inventario de equipos, polling ICMP, SSE dashboard basico (completed 2026-04-27)
-- [ ] **Phase 3: Mikrotik + Alertas + Incidentes** - RouterOS API collector, motor de alertas Telegram con debounce, historial de incidentes
+- [x] **Phase 3: Mikrotik + Alertas + Incidentes** - RouterOS API collector, motor de alertas Telegram con debounce, historial de incidentes (completed 2026-04-27)
 - [ ] **Phase 4: VSOL OLT Collector** - SSH/CLI parsing para OLTs VSOL GPON y EPON, estado y señal de ONUs
 - [ ] **Phase 5: Ubiquiti y Mimosa Collectors** - UISP REST API y Mimosa REST API, metricas de radioenlaces
 - [ ] **Phase 6: Dashboard Completo** - Filtros, detalle por equipo, graficas de tendencia 24h, deploy final con dominio propio
@@ -70,7 +70,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Mikrotik collector: librouteros 4.0.1 async_connect, circuit breaker Redis, servicio de umbrales DB/env, tests MK-01/02/03/04/ALERT-06
 - [x] 03-02-PLAN.md — Motor de alertas: telegram.py outbound-only, handle_device_down/recovery con debounce countdown, open/close incident SELECT FOR UPDATE, tests ALERT-01/02/03/04/05/INC-01/02
-- [ ] 03-03-PLAN.md — API incidentes + limpieza: GET /api/v1/incidents con filtros JWT, cleanup_old_data Celery beat 3am, tests INC-03/04
+- [x] 03-03-PLAN.md — API incidentes + limpieza: GET /api/v1/incidents con filtros JWT, cleanup_old_data Celery beat 3am, tests INC-03/04
 
 ### Phase 4: VSOL OLT Collector
 **Goal**: El tecnico puede ver el estado de todas las ONUs GPON y EPON — online/offline y senal optica Rx/Tx dBm — recolectado via SSH a las OLTs VSOL
@@ -117,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
 | 2. Foundation | 4/4 | Complete   | 2026-04-27 |
-| 3. Mikrotik + Alertas + Incidentes | 2/3 | In Progress|  |
+| 3. Mikrotik + Alertas + Incidentes | 3/3 | Complete   | 2026-04-27 |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
 | 6. Dashboard Completo | 0/TBD | Not started | - |

@@ -83,8 +83,8 @@
 
 - [x] **INC-01**: El sistema registra automáticamente cada incidente: equipo afectado, hora de inicio (DOWN), hora de recuperación (UP), duración total
 - [x] **INC-02**: El técnico puede ver la lista de incidentes ordenada por fecha, filtrable por equipo y sitio
-- [ ] **INC-03**: Las métricas históricas se retienen 30 días; los incidentes se retienen 30 días
-- [ ] **INC-04**: La base de datos tiene política de limpieza automática para no crecer indefinidamente
+- [x] **INC-03**: Las métricas históricas se retienen 30 días; los incidentes se retienen 30 días
+- [x] **INC-04**: La base de datos tiene política de limpieza automática para no crecer indefinidamente
 
 ### DEPLOY — Deploy y Operaciones
 
@@ -149,8 +149,8 @@
 | ALERT-06 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
-| INC-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| INC-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-03 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| INC-04 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | VSOL-01 | Phase 4: VSOL OLT Collector | Pending |
 | VSOL-02 | Phase 4: VSOL OLT Collector | Pending |
 | VSOL-03 | Phase 4: VSOL OLT Collector | Pending |

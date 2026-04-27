@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: "Phase 03-01 complete: Mikrotik collector + circuit breaker + thresholds. 112 unit tests pasan."
-last_updated: "2026-04-27T03:45:51.279Z"
+status: verifying
+stopped_at: "Phase 03 COMPLETE: incidents API + maintenance task. 135 unit tests pasan."
+last_updated: "2026-04-27T03:52:35.028Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 9
-  completed_plans: 8
-  percent: 89
+  completed_plans: 9
+  percent: 100
 ---
 
 # Project State
@@ -27,7 +27,7 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 
 Phase: 03 (Mikrotik + Alertas + Incidentes) — EXECUTING
 Plan: 3 of 3
-Status: Ready to execute
+Status: Phase complete — ready for verification
 Last activity: 2026-04-27
 
 Progress: [██░░░░░░░░] 33%
@@ -59,6 +59,7 @@ Progress: [██░░░░░░░░] 33%
 | Phase 02-foundation P04 | 45m | 3 tasks | 20 files |
 | Phase 03 P02 | 35m | 3 tasks | 8 files |
 | Phase 03 P01 | 20m | 3 tasks | 10 files |
+| Phase 03 P03 | 20m | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -90,6 +91,8 @@ Recent decisions affecting current work:
 - [Phase 03-02]: close_incident() no hace commit — caller combina con recovery_alert_sent=True en una transaccion atomica
 - [Phase 03]: librouteros 4.0.1 async_connect() nativo — api.close() es sincronica (sin await)
 - [Phase 03]: circuit breaker: record_api_failure() elimina cb:fails al abrir el circuit — evita conteo doble si clave no expiro
+- [Phase 03]: result.mappings().all() + model_validate(dict(row)) es el patron para JOINs SQLAlchemy con Pydantic v2 — scalars() no funciona con columnas individuales de JOIN
+- [Phase 03]: resolved_at IS NOT NULL es guarda critica en DELETE de incidents — verificado por inspeccion de codigo fuente en test
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-27T03:45:51.276Z
-Stopped at: Phase 03-01 complete: Mikrotik collector + circuit breaker + thresholds. 112 unit tests pasan.
+Last session: 2026-04-27T03:52:35.024Z
+Stopped at: Phase 03 COMPLETE: incidents API + maintenance task. 135 unit tests pasan.
 Resume file: None
