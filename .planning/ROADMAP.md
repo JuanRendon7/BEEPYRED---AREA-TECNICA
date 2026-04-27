@@ -65,7 +65,12 @@ Plans:
   3. El sistema registra automaticamente cada incidente (equipo, hora inicio, hora fin, duracion) y el tecnico puede ver la lista filtrada por equipo y sitio
   4. Las metricas historicas y los incidentes se retienen 30 dias con limpieza automatica que previene crecimiento indefinido de la DB
   5. Los umbrales de alerta (CPU %, dBm ONU) son configurables sin tocar el codigo; el collector Mikrotik tiene circuit breaker que suspende polling 5 minutos tras 3 fallos consecutivos
-**Plans**: TBD
+**Plans**: 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Mikrotik collector: librouteros 4.0.1 async_connect, circuit breaker Redis, servicio de umbrales DB/env, tests MK-01/02/03/04/ALERT-06
+- [ ] 03-02-PLAN.md — Motor de alertas: telegram.py outbound-only, handle_device_down/recovery con debounce countdown, open/close incident SELECT FOR UPDATE, tests ALERT-01/02/03/04/05/INC-01/02
+- [ ] 03-03-PLAN.md — API incidentes + limpieza: GET /api/v1/incidents con filtros JWT, cleanup_old_data Celery beat 3am, tests INC-03/04
 
 ### Phase 4: VSOL OLT Collector
 **Goal**: El tecnico puede ver el estado de todas las ONUs GPON y EPON — online/offline y senal optica Rx/Tx dBm — recolectado via SSH a las OLTs VSOL
@@ -112,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
 | 2. Foundation | 4/4 | Complete   | 2026-04-27 |
-| 3. Mikrotik + Alertas + Incidentes | 0/TBD | Not started | - |
+| 3. Mikrotik + Alertas + Incidentes | 0/3 | Not started | - |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
 | 6. Dashboard Completo | 0/TBD | Not started | - |
