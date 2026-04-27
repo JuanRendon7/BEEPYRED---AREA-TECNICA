@@ -55,10 +55,16 @@ class Settings(BaseSettings):
     MAX_CONCURRENT_CONNECTIONS: int = 50
     DEVICE_TIMEOUT_SECONDS: int = 10
 
+    # -- Mikrotik RouterOS API (Phase 3) -----------------------------------------
+    MIKROTIK_API_PORT: int = 8728
+
     # -- Umbrales de alerta (Phase 3) ------------------------------------------------
     CPU_ALERT_THRESHOLD_PCT: float = 90.0
     ONU_SIGNAL_MIN_DBM: float = -28.0
     CONSECUTIVE_FAILURES_THRESHOLD: int = 3
+    # Tiempo de espera (segundos) antes de enviar alerta DOWN — anti-flapping debounce
+    # Si el equipo se recupera dentro de este ventana, la alerta se suprime (ALERT-04)
+    ALERT_DEBOUNCE_SECONDS: int = 120
 
     # -- Auth (Phase 2) --------------------------------------------------------------
     # Duracion del JWT. 1440 = 24 horas. El tecnico no hace login todos los dias.
