@@ -17,3 +17,5 @@ pytest-cov==6.1.0
 pyjwt[crypto]>=2.10.1
 pwdlib[argon2]==0.2.1
 python-multipart==0.0.20
+librouteros==4.0.1
+python-telegram-bot==21.*
