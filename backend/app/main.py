@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api import auth as auth_router
 from app.api import devices as devices_router
 from app.api import events as events_router
+from app.api.v1.incidents import router as incidents_router
 
 app = FastAPI(
     title="BEEPYRED NOC",
@@ -26,6 +27,7 @@ app.add_middleware(
 app.include_router(auth_router.router)
 app.include_router(devices_router.router)
 app.include_router(events_router.router)
+app.include_router(incidents_router, prefix="/api/v1")
 
 
 @app.get("/health")
