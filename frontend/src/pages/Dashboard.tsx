@@ -48,6 +48,9 @@ export function DashboardPage() {
           <Button variant="ghost" size="sm" onClick={() => navigate("/inventory")}>
             Inventario
           </Button>
+          <Button variant="ghost" size="sm" onClick={() => navigate("/incidents")}>
+            Incidentes
+          </Button>
           <Button variant="outline" size="sm" onClick={handleLogout}>
             Salir
           </Button>
