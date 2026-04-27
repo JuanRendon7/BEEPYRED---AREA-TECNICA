@@ -22,10 +22,10 @@
 
 ### INV — Inventario de Equipos
 
-- [ ] **INV-01**: El técnico puede registrar un equipo con: nombre, IP, tipo (Mikrotik / OLT VSOL GPON / OLT VSOL EPON / ONU / Ubiquiti / Mimosa / Otro), sitio/ubicación, estado inicial
-- [ ] **INV-02**: El técnico puede agrupar equipos por sitio geográfico (ej: Torre Norte, Nodo Centro, Repetidor Km12)
-- [ ] **INV-03**: El técnico puede agregar, editar y eliminar equipos del inventario
-- [ ] **INV-04**: El inventario muestra estado actual (UP/DOWN/WARNING/UNKNOWN) de cada equipo en tiempo real
+- [x] **INV-01**: El técnico puede registrar un equipo con: nombre, IP, tipo (Mikrotik / OLT VSOL GPON / OLT VSOL EPON / ONU / Ubiquiti / Mimosa / Otro), sitio/ubicación, estado inicial
+- [x] **INV-02**: El técnico puede agrupar equipos por sitio geográfico (ej: Torre Norte, Nodo Centro, Repetidor Km12)
+- [x] **INV-03**: El técnico puede agregar, editar y eliminar equipos del inventario
+- [x] **INV-04**: El inventario muestra estado actual (UP/DOWN/WARNING/UNKNOWN) de cada equipo en tiempo real
 
 ### POLL — Polling y Estado
 
@@ -128,10 +128,10 @@
 | AUTH-01 | Phase 2: Foundation | Complete |
 | AUTH-02 | Phase 2: Foundation | Complete |
 | AUTH-03 | Phase 2: Foundation | Complete |
-| INV-01 | Phase 2: Foundation | Pending |
-| INV-02 | Phase 2: Foundation | Pending |
-| INV-03 | Phase 2: Foundation | Pending |
-| INV-04 | Phase 2: Foundation | Pending |
+| INV-01 | Phase 2: Foundation | Complete |
+| INV-02 | Phase 2: Foundation | Complete |
+| INV-03 | Phase 2: Foundation | Complete |
+| INV-04 | Phase 2: Foundation | Complete |
 | POLL-01 | Phase 2: Foundation | Pending |
 | POLL-02 | Phase 2: Foundation | Pending |
 | POLL-03 | Phase 2: Foundation | Pending |

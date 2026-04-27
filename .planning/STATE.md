@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-01-PLAN.md — JWT auth, User model, auth router, CurrentUser dep, 10 unit tests
-last_updated: "2026-04-27T02:56:29.361Z"
+stopped_at: Completed 02-02-PLAN.md — Device Inventory CRUD, 5 endpoints /devices, schemas Pydantic v2, 12 unit tests
+last_updated: "2026-04-27T03:00:03.464Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 6
-  completed_plans: 3
-  percent: 50
+  completed_plans: 4
+  percent: 67
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 ## Current Position
 
 Phase: 02 (Foundation) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
 Last activity: 2026-04-27
 
@@ -54,6 +54,7 @@ Progress: [█░░░░░░░░░] 50%
 *Updated after each plan completion*
 | Phase 01-infrastructure P02 | 25m | 2 tasks | 18 files |
 | Phase 02-foundation P01 | 5m | 2 tasks | 12 files |
+| Phase 02-foundation P02 | 2m | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -73,6 +74,9 @@ Recent decisions affecting current work:
 - [Phase 02-01]: ADMIN_PASSWORD default 'changeme' accepted — seed_admin.py guards production deploy
 - [Phase 02-01]: Timing attack mitigation via _DUMMY_HASH in POST /auth/login — prevents user enumeration
 - [Phase 02-01]: CORS configured with explicit origins list (no wildcard) — allow_credentials=True requires this
+- [Phase 02-02]: DeviceUpdate excluye campo status — solo el worker de polling puede cambiarlo (T-2-12)
+- [Phase 02-02]: DELETE soft delete is_active=False preserva historial para auditoria (T-2-14)
+- [Phase 02-02]: GET /devices?active_only=true por defecto — oculta equipos eliminados del listado
 
 ### Pending Todos
 
@@ -86,6 +90,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-27T02:56:29.357Z
-Stopped at: Completed 02-01-PLAN.md — JWT auth, User model, auth router, CurrentUser dep, 10 unit tests
+Last session: 2026-04-27T03:00:03.461Z
+Stopped at: Completed 02-02-PLAN.md — Device Inventory CRUD, 5 endpoints /devices, schemas Pydantic v2, 12 unit tests
 Resume file: None
