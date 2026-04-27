@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 from app.core.config import settings
 
 celery_app = Celery(
@@ -12,7 +13,7 @@ celery_app = Celery(
         "app.tasks.polling",
         "app.tasks.mikrotik",
         "app.tasks.alerts",
-        # app.tasks.maintenance — se agrega en Plan 03
+        "app.tasks.maintenance",
     ],
 )
 
@@ -41,6 +42,12 @@ celery_app.conf.update(
             "options": {
                 "expires": settings.POLL_INTERVAL_SECONDS - 5,
             },
+        },
+        # MK-03/INC-04: limpieza diaria de datos historicos > 30 dias (3am hora Colombia)
+        "cleanup-old-data": {
+            "task": "tasks.cleanup_old_data",
+            "schedule": crontab(hour=3, minute=0),  # 3am hora Colombia (UTC-5)
+            "options": {"expires": 3600},  # si no se ejecuto en 1h, descartar
         },
     },
 )
