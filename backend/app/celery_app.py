@@ -5,7 +5,10 @@ celery_app = Celery(
     "beepyred_noc",
     broker=settings.REDIS_URL,
     backend=settings.REDIS_URL,
-    include=["app.tasks.maintenance"],
+    # Registrar los modulos de tasks para autodescubrimiento
+    # app.tasks.polling: ICMP ping a todos los equipos (Phase 2)
+    # app.tasks.maintenance: limpieza de metricas antiguas (Phase 3 — pendiente)
+    include=["app.tasks.polling"],
 )
 
 celery_app.conf.update(
@@ -14,6 +17,17 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="America/Bogota",
     enable_utc=True,
-    # Celery beat: schedule de mantenimiento (Phase 2+)
-    beat_schedule={},
+    beat_schedule={
+        # POLL-01: ping a todos los equipos cada POLL_INTERVAL_SECONDS (60s)
+        # expires previene acumulacion si el ciclo anterior no termino (T-2-21)
+        "poll-all-devices": {
+            "task": "tasks.poll_all_devices",
+            "schedule": settings.POLL_INTERVAL_SECONDS,
+            "options": {
+                # Si el task se retrasa mas de POLL_INTERVAL_SECONDS, descartar
+                # para no acumular tareas en cola (evita doble polling)
+                "expires": settings.POLL_INTERVAL_SECONDS - 5,
+            },
+        },
+    },
 )
