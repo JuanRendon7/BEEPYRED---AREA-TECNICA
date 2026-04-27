@@ -176,4 +176,20 @@ async def _ping_and_update(device: Device) -> bool:
     if new_status != previous_status:
         await publish_status_update(device.id, new_status.value)
 
+        # ALERT-01: disparar tasks de alerta en transiciones de estado
+        # Import diferido dentro de la funcion para evitar import circular durante tests
+        from app.tasks.alerts import handle_device_down, handle_device_recovery  # noqa: PLC0415
+
+        if new_status == DeviceStatus.DOWN:
+            # ALERT-04: countdown = ALERT_DEBOUNCE_SECONDS (debounce anti-flapping)
+            # Si el equipo se recupera antes del countdown, handle_device_down
+            # encontrara el incidente cerrado y suprimira la alerta
+            handle_device_down.apply_async(
+                args=[device.id],
+                countdown=settings.ALERT_DEBOUNCE_SECONDS,
+            )
+        elif new_status == DeviceStatus.UP and previous_status == DeviceStatus.DOWN:
+            # Recovery inmediato — sin countdown
+            handle_device_recovery.delay(device.id)
+
     return is_up

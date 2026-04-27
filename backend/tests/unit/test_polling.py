@@ -200,9 +200,13 @@ def test_consecutive_failures_down_at_threshold(set_test_env_vars):
     mock_session_factory = MagicMock()
     mock_session_factory.return_value = mock_session
 
+    mock_handle_down = MagicMock()
+    mock_handle_down.apply_async = MagicMock()
+
     with patch("app.tasks.polling.ping_host", return_value=False), \
          patch("app.tasks.polling.AsyncSessionLocal", mock_session_factory), \
-         patch("app.tasks.polling.publish_status_update", new_callable=AsyncMock):
+         patch("app.tasks.polling.publish_status_update", new_callable=AsyncMock), \
+         patch("app.tasks.alerts.handle_device_down", mock_handle_down):
         asyncio.run(_ping_and_update(device))
 
     assert mock_db_device.consecutive_failures == settings.CONSECUTIVE_FAILURES_THRESHOLD
@@ -239,9 +243,13 @@ def test_consecutive_failures_reset_on_success(set_test_env_vars):
     mock_session_factory = MagicMock()
     mock_session_factory.return_value = mock_session
 
+    mock_handle_recovery = MagicMock()
+    mock_handle_recovery.delay = MagicMock()
+
     with patch("app.tasks.polling.ping_host", return_value=True), \
          patch("app.tasks.polling.AsyncSessionLocal", mock_session_factory), \
-         patch("app.tasks.polling.publish_status_update", new_callable=AsyncMock):
+         patch("app.tasks.polling.publish_status_update", new_callable=AsyncMock), \
+         patch("app.tasks.alerts.handle_device_recovery", mock_handle_recovery):
         asyncio.run(_ping_and_update(device))
 
     assert mock_db_device.consecutive_failures == 0

@@ -8,7 +8,12 @@ celery_app = Celery(
     # Registrar los modulos de tasks para autodescubrimiento
     # app.tasks.polling: ICMP ping a todos los equipos (Phase 2)
     # app.tasks.maintenance: limpieza de metricas antiguas (Phase 3 — pendiente)
-    include=["app.tasks.polling"],
+    include=[
+        "app.tasks.polling",
+        "app.tasks.mikrotik",
+        "app.tasks.alerts",
+        # app.tasks.maintenance — se agrega en Plan 03
+    ],
 )
 
 celery_app.conf.update(
@@ -26,6 +31,14 @@ celery_app.conf.update(
             "options": {
                 # Si el task se retrasa mas de POLL_INTERVAL_SECONDS, descartar
                 # para no acumular tareas en cola (evita doble polling)
+                "expires": settings.POLL_INTERVAL_SECONDS - 5,
+            },
+        },
+        # MK-01/02: recolectar metricas RouterOS de todos los Mikrotik activos
+        "poll-mikrotik-devices": {
+            "task": "tasks.poll_all_mikrotik",
+            "schedule": settings.POLL_INTERVAL_SECONDS,
+            "options": {
                 "expires": settings.POLL_INTERVAL_SECONDS - 5,
             },
         },
