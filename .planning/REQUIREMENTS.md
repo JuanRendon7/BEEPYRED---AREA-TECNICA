@@ -37,10 +37,10 @@
 
 ### MK — Mikrotik RouterOS API
 
-- [ ] **MK-01**: El sistema recolecta CPU actual (%) y RAM usada (%) de cada router Mikrotik vía RouterOS API
-- [ ] **MK-02**: El sistema recolecta tráfico TX/RX (bps) por interfaz en cada router Mikrotik vía RouterOS API
-- [ ] **MK-03**: Las sesiones RouterOS API se cierran correctamente después de cada consulta (sin sesiones zombie)
-- [ ] **MK-04**: El collector Mikrotik tiene circuit breaker: después de 3 fallos consecutivos suspende polling por 5 minutos antes de reintentar
+- [x] **MK-01**: El sistema recolecta CPU actual (%) y RAM usada (%) de cada router Mikrotik vía RouterOS API
+- [x] **MK-02**: El sistema recolecta tráfico TX/RX (bps) por interfaz en cada router Mikrotik vía RouterOS API
+- [x] **MK-03**: Las sesiones RouterOS API se cierran correctamente después de cada consulta (sin sesiones zombie)
+- [x] **MK-04**: El collector Mikrotik tiene circuit breaker: después de 3 fallos consecutivos suspende polling por 5 minutos antes de reintentar
 
 ### VSOL — OLTs VSOL y ONUs
 
@@ -69,7 +69,7 @@
 - [x] **ALERT-03**: El sistema envía alerta a Telegram cuando la señal óptica de una ONU GPON cae por debajo de -28 dBm
 - [x] **ALERT-04**: El sistema envía alerta a Telegram cuando el CPU de un router Mikrotik supera el 90% por más de 2 minutos consecutivos
 - [x] **ALERT-05**: Los umbrales de alerta (dBm, CPU %) son configurables sin tocar el código
-- [ ] **ALERT-06**: Los mensajes de Telegram incluyen: nombre del equipo, IP, sitio/ubicación, tipo de problema, timestamp
+- [x] **ALERT-06**: Los mensajes de Telegram incluyen: nombre del equipo, IP, sitio/ubicación, tipo de problema, timestamp
 
 ### DASH — Dashboard y Visualización
 
@@ -137,16 +137,16 @@
 | POLL-03 | Phase 2: Foundation | Complete |
 | POLL-04 | Phase 2: Foundation | Complete |
 | POLL-05 | Phase 2: Foundation | Complete |
-| MK-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| MK-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| MK-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| MK-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| MK-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| MK-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| MK-03 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| MK-04 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-03 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-04 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-05 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
-| ALERT-06 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-06 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |

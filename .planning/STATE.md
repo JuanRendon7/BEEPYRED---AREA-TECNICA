@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: "Phase 03-02 complete: alert engine + Telegram + incident lifecycle. 3 tasks, 112 tests passing."
-last_updated: "2026-04-27T03:44:55.991Z"
+stopped_at: "Phase 03-01 complete: Mikrotik collector + circuit breaker + thresholds. 112 unit tests pasan."
+last_updated: "2026-04-27T03:45:51.279Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 9
-  completed_plans: 7
-  percent: 78
+  completed_plans: 8
+  percent: 89
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 ## Current Position
 
 Phase: 03 (Mikrotik + Alertas + Incidentes) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-04-27
 
@@ -58,6 +58,7 @@ Progress: [██░░░░░░░░] 33%
 | Phase 02-foundation P03 | 162 | 2 tasks | 3 files |
 | Phase 02-foundation P04 | 45m | 3 tasks | 20 files |
 | Phase 03 P02 | 35m | 3 tasks | 8 files |
+| Phase 03 P01 | 20m | 3 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -87,6 +88,8 @@ Recent decisions affecting current work:
 - [Phase 03-02]: _get_bot_class() seam en telegram.py permite mockear Bot sin instalar python-telegram-bot en CI
 - [Phase 03-02]: Deferred import de alerts dentro de _ping_and_update() previene circular import (polling->alerts->models)
 - [Phase 03-02]: close_incident() no hace commit — caller combina con recovery_alert_sent=True en una transaccion atomica
+- [Phase 03]: librouteros 4.0.1 async_connect() nativo — api.close() es sincronica (sin await)
+- [Phase 03]: circuit breaker: record_api_failure() elimina cb:fails al abrir el circuit — evita conteo doble si clave no expiro
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-27T03:44:55.988Z
-Stopped at: Phase 03-02 complete: alert engine + Telegram + incident lifecycle. 3 tasks, 112 tests passing.
+Last session: 2026-04-27T03:45:51.276Z
+Stopped at: Phase 03-01 complete: Mikrotik collector + circuit breaker + thresholds. 112 unit tests pasan.
 Resume file: None
