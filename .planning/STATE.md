@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-02-PLAN.md — models, Alembic async, Fernet security, 10 unit tests
-last_updated: "2026-04-26T20:08:55.418Z"
-last_activity: 2026-04-26 -- Phase 2 planning complete
+stopped_at: Completed 02-01-PLAN.md — JWT auth, User model, auth router, CurrentUser dep, 10 unit tests
+last_updated: "2026-04-27T02:56:29.361Z"
+last_activity: 2026-04-27
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 6
-  completed_plans: 2
-  percent: 33
+  completed_plans: 3
+  percent: 50
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-25)
 
 **Core value:** El tecnico debe poder ver en un solo vistazo que equipo esta caido o degradado, sin entrar a cada equipo individualmente
-**Current focus:** Phase 1 — Infrastructure
+**Current focus:** Phase 02 — Foundation
 
 ## Current Position
 
-Phase: 1 of 6 (Infrastructure)
-Plan: 2 of 2 in current phase
+Phase: 02 (Foundation) — EXECUTING
+Plan: 2 of 4
 Status: Ready to execute
-Last activity: 2026-04-26 -- Phase 2 planning complete
+Last activity: 2026-04-27
 
 Progress: [█░░░░░░░░░] 50%
 
@@ -53,6 +53,7 @@ Progress: [█░░░░░░░░░] 50%
 
 *Updated after each plan completion*
 | Phase 01-infrastructure P02 | 25m | 2 tasks | 18 files |
+| Phase 02-foundation P01 | 5m | 2 tasks | 12 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,10 @@ Recent decisions affecting current work:
 - [Phase 01-02]: PostgreSQL pure (no TimescaleDB) — metrics.recorded_at uses BRIN index instead of TimescaleDB hypertable
 - [Phase 01-02]: Alembic migrations run as Railway pre-deploy command (not container startup) — prevents blocking FastAPI boot
 - [Phase 01-02]: FERNET_KEY is SecretStr — .get_secret_value() used in security.py, never logged or str()-cast
+- [Phase 02-01]: PyJWT upgraded to >=2.10.1 (from 2.9.0) to resolve mcp dependency conflict on dev machine
+- [Phase 02-01]: ADMIN_PASSWORD default 'changeme' accepted — seed_admin.py guards production deploy
+- [Phase 02-01]: Timing attack mitigation via _DUMMY_HASH in POST /auth/login — prevents user enumeration
+- [Phase 02-01]: CORS configured with explicit origins list (no wildcard) — allow_credentials=True requires this
 
 ### Pending Todos
 
@@ -81,6 +86,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-26T19:03:06.917Z
-Stopped at: Completed 01-02-PLAN.md — models, Alembic async, Fernet security, 10 unit tests
+Last session: 2026-04-27T02:56:29.357Z
+Stopped at: Completed 02-01-PLAN.md — JWT auth, User model, auth router, CurrentUser dep, 10 unit tests
 Resume file: None

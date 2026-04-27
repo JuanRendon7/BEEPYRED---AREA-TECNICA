@@ -16,9 +16,9 @@
 
 ### AUTH — Autenticación
 
-- [ ] **AUTH-01**: El técnico puede iniciar sesión con usuario y contraseña para acceder a la plataforma
-- [ ] **AUTH-02**: La sesión persiste entre visitas (JWT con expiración configurable)
-- [ ] **AUTH-03**: La plataforma es inaccesible sin autenticación (rutas protegidas)
+- [x] **AUTH-01**: El técnico puede iniciar sesión con usuario y contraseña para acceder a la plataforma
+- [x] **AUTH-02**: La sesión persiste entre visitas (JWT con expiración configurable)
+- [x] **AUTH-03**: La plataforma es inaccesible sin autenticación (rutas protegidas)
 
 ### INV — Inventario de Equipos
 
@@ -125,9 +125,9 @@
 | DEPLOY-01 | Phase 1: Infrastructure | Complete |
 | DEPLOY-02 | Phase 6: Dashboard Completo | Complete |
 | DEPLOY-03 | Phase 1: Infrastructure | Complete |
-| AUTH-01 | Phase 2: Foundation | Pending |
-| AUTH-02 | Phase 2: Foundation | Pending |
-| AUTH-03 | Phase 2: Foundation | Pending |
+| AUTH-01 | Phase 2: Foundation | Complete |
+| AUTH-02 | Phase 2: Foundation | Complete |
+| AUTH-03 | Phase 2: Foundation | Complete |
 | INV-01 | Phase 2: Foundation | Pending |
 | INV-02 | Phase 2: Foundation | Pending |
 | INV-03 | Phase 2: Foundation | Pending |

@@ -50,7 +50,7 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Auth backend: PyJWT + pwdlib/Argon2, modelo User, migracion 002, seed_admin, tests AUTH-01/02/03
+- [x] 02-01-PLAN.md — Auth backend: PyJWT + pwdlib/Argon2, modelo User, migracion 002, seed_admin, tests AUTH-01/02/03
 - [ ] 02-02-PLAN.md — Inventario backend: schemas Pydantic, CRUD /devices con filtro por sitio, tests INV-01/02/03/04
 - [ ] 02-03-PLAN.md — ICMP polling worker: ping_host + asyncio.Semaphore + consecutive_failures + Redis pub/sub, Celery beat 60s
 - [ ] 02-04-PLAN.md — SSE endpoint /events + frontend React (Vite + shadcn/ui + login + dashboard + inventory CRUD)
