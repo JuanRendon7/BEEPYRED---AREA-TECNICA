@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md — Device Inventory CRUD, 5 endpoints /devices, schemas Pydantic v2, 12 unit tests
-last_updated: "2026-04-27T03:00:03.464Z"
+stopped_at: Completed 02-03-PLAN.md — ICMP polling worker, Celery beat schedule, 11 unit tests
+last_updated: "2026-04-27T03:04:34.307Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 6
-  completed_plans: 4
-  percent: 67
+  completed_plans: 5
+  percent: 83
 ---
 
 # Project State
@@ -26,7 +26,7 @@ See: .planning/PROJECT.md (updated 2026-04-25)
 ## Current Position
 
 Phase: 02 (Foundation) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 Status: Ready to execute
 Last activity: 2026-04-27
 
@@ -55,6 +55,7 @@ Progress: [█░░░░░░░░░] 50%
 | Phase 01-infrastructure P02 | 25m | 2 tasks | 18 files |
 | Phase 02-foundation P01 | 5m | 2 tasks | 12 files |
 | Phase 02-foundation P02 | 2m | 2 tasks | 5 files |
+| Phase 02-foundation P03 | 162 | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -77,6 +78,8 @@ Recent decisions affecting current work:
 - [Phase 02-02]: DeviceUpdate excluye campo status — solo el worker de polling puede cambiarlo (T-2-12)
 - [Phase 02-02]: DELETE soft delete is_active=False preserva historial para auditoria (T-2-14)
 - [Phase 02-02]: GET /devices?active_only=true por defecto — oculta equipos eliminados del listado
+- [Phase 02-foundation]: asyncio.run() en Celery task (no loop.run_until_complete deprecated); subprocess ping -c 1 no requiere NET_RAW en Railway
+- [Phase 02-foundation]: consecutive_failures en columna DB, publish_status_update solo en cambio de estado
 
 ### Pending Todos
 
@@ -90,6 +93,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-27T03:00:03.461Z
-Stopped at: Completed 02-02-PLAN.md — Device Inventory CRUD, 5 endpoints /devices, schemas Pydantic v2, 12 unit tests
+Last session: 2026-04-27T03:04:34.304Z
+Stopped at: Completed 02-03-PLAN.md — ICMP polling worker, Celery beat schedule, 11 unit tests
 Resume file: None

@@ -52,7 +52,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Auth backend: PyJWT + pwdlib/Argon2, modelo User, migracion 002, seed_admin, tests AUTH-01/02/03
 - [x] 02-02-PLAN.md — Inventario backend: schemas Pydantic, CRUD /devices con filtro por sitio, tests INV-01/02/03/04
-- [ ] 02-03-PLAN.md — ICMP polling worker: ping_host + asyncio.Semaphore + consecutive_failures + Redis pub/sub, Celery beat 60s
+- [x] 02-03-PLAN.md — ICMP polling worker: ping_host + asyncio.Semaphore + consecutive_failures + Redis pub/sub, Celery beat 60s
 - [ ] 02-04-PLAN.md — SSE endpoint /events + frontend React (Vite + shadcn/ui + login + dashboard + inventory CRUD)
 
 ### Phase 3: Mikrotik + Alertas + Incidentes
@@ -111,7 +111,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
-| 2. Foundation | 0/4 | Planned | - |
+| 2. Foundation | 3/4 | In Progress|  |
 | 3. Mikrotik + Alertas + Incidentes | 0/TBD | Not started | - |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |

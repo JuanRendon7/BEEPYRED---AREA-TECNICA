@@ -29,11 +29,11 @@
 
 ### POLL — Polling y Estado
 
-- [ ] **POLL-01**: El sistema ejecuta ICMP ping a todos los equipos del inventario cada 60 segundos
-- [ ] **POLL-02**: El polling es concurrente con límite de concurrencia configurable (máx 50 simultáneos) para evitar saturar la red
-- [ ] **POLL-03**: Un equipo se declara DOWN solo después de 3 polls consecutivos fallidos (debounce anti-falsos-positivos)
-- [ ] **POLL-04**: El estado UP/DOWN se actualiza en el dashboard sin recargar la página (Server-Sent Events)
-- [ ] **POLL-05**: Los equipos que no responden en N segundos tienen timeout individual y no bloquean el ciclo de polling
+- [x] **POLL-01**: El sistema ejecuta ICMP ping a todos los equipos del inventario cada 60 segundos
+- [x] **POLL-02**: El polling es concurrente con límite de concurrencia configurable (máx 50 simultáneos) para evitar saturar la red
+- [x] **POLL-03**: Un equipo se declara DOWN solo después de 3 polls consecutivos fallidos (debounce anti-falsos-positivos)
+- [x] **POLL-04**: El estado UP/DOWN se actualiza en el dashboard sin recargar la página (Server-Sent Events)
+- [x] **POLL-05**: Los equipos que no responden en N segundos tienen timeout individual y no bloquean el ciclo de polling
 
 ### MK — Mikrotik RouterOS API
 
@@ -132,11 +132,11 @@
 | INV-02 | Phase 2: Foundation | Complete |
 | INV-03 | Phase 2: Foundation | Complete |
 | INV-04 | Phase 2: Foundation | Complete |
-| POLL-01 | Phase 2: Foundation | Pending |
-| POLL-02 | Phase 2: Foundation | Pending |
-| POLL-03 | Phase 2: Foundation | Pending |
-| POLL-04 | Phase 2: Foundation | Pending |
-| POLL-05 | Phase 2: Foundation | Pending |
+| POLL-01 | Phase 2: Foundation | Complete |
+| POLL-02 | Phase 2: Foundation | Complete |
+| POLL-03 | Phase 2: Foundation | Complete |
+| POLL-04 | Phase 2: Foundation | Complete |
+| POLL-05 | Phase 2: Foundation | Complete |
 | MK-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | MK-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | MK-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
