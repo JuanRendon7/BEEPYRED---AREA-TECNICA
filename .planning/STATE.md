@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: human_needed
-stopped_at: Phase 02-foundation verificada — 5/5 criterios pasados; pendiente verificacion humana de flujos end-to-end (auth, CRUD, SSE en tiempo real)
-last_updated: "2026-04-27T04:00:00.000Z"
+status: executing
+stopped_at: "Phase 03-02 complete: alert engine + Telegram + incident lifecycle. 3 tasks, 112 tests passing."
+last_updated: "2026-04-27T03:44:55.991Z"
 last_activity: 2026-04-27
 progress:
   total_phases: 6
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
-  percent: 100
+  total_plans: 9
+  completed_plans: 7
+  percent: 78
 ---
 
 # Project State
@@ -21,13 +21,13 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-25)
 
 **Core value:** El tecnico debe poder ver en un solo vistazo que equipo esta caido o degradado, sin entrar a cada equipo individualmente
-**Current focus:** Phase 02 — Foundation (verificada, pendiente confirmacion humana)
+**Current focus:** Phase 03 — Mikrotik + Alertas + Incidentes
 
 ## Current Position
 
-Phase: 02 (Foundation) — VERIFIED (human_needed)
-Plan: 4 of 4
-Status: Verificacion automatica completa 5/5. Requiere prueba humana end-to-end antes de avanzar a Phase 3.
+Phase: 03 (Mikrotik + Alertas + Incidentes) — EXECUTING
+Plan: 2 of 3
+Status: Ready to execute
 Last activity: 2026-04-27
 
 Progress: [██░░░░░░░░] 33%
@@ -57,6 +57,7 @@ Progress: [██░░░░░░░░] 33%
 | Phase 02-foundation P02 | 2m | 2 tasks | 5 files |
 | Phase 02-foundation P03 | 162 | 2 tasks | 3 files |
 | Phase 02-foundation P04 | 45m | 3 tasks | 20 files |
+| Phase 03 P02 | 35m | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -83,6 +84,9 @@ Recent decisions affecting current work:
 - [Phase 02-foundation]: consecutive_failures en columna DB, publish_status_update solo en cambio de estado
 - [Phase 02-foundation]: shadcn v4 usa @base-ui/react — API de primitivos diferente a @radix-ui pero variantes CSS compatibles con el plan
 - [Phase 02-foundation]: EventSource + JWT: token en query param ?token=... es la solucion v1 aceptada (T-2-30); frontend/dist/ excluido de git — Railway hace build en deploy
+- [Phase 03-02]: _get_bot_class() seam en telegram.py permite mockear Bot sin instalar python-telegram-bot en CI
+- [Phase 03-02]: Deferred import de alerts dentro de _ping_and_update() previene circular import (polling->alerts->models)
+- [Phase 03-02]: close_incident() no hace commit — caller combina con recovery_alert_sent=True en una transaccion atomica
 
 ### Pending Todos
 
@@ -96,6 +100,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-04-27T04:00:00.000Z
-Stopped at: Phase 02-foundation verificada automaticamente (5/5). Pendiente verificacion humana end-to-end. Ver .planning/phases/02-foundation/02-VERIFICATION.md.
+Last session: 2026-04-27T03:44:55.988Z
+Stopped at: Phase 03-02 complete: alert engine + Telegram + incident lifecycle. 3 tasks, 112 tests passing.
 Resume file: None

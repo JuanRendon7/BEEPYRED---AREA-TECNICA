@@ -69,7 +69,7 @@ Plans:
 
 Plans:
 - [ ] 03-01-PLAN.md — Mikrotik collector: librouteros 4.0.1 async_connect, circuit breaker Redis, servicio de umbrales DB/env, tests MK-01/02/03/04/ALERT-06
-- [ ] 03-02-PLAN.md — Motor de alertas: telegram.py outbound-only, handle_device_down/recovery con debounce countdown, open/close incident SELECT FOR UPDATE, tests ALERT-01/02/03/04/05/INC-01/02
+- [x] 03-02-PLAN.md — Motor de alertas: telegram.py outbound-only, handle_device_down/recovery con debounce countdown, open/close incident SELECT FOR UPDATE, tests ALERT-01/02/03/04/05/INC-01/02
 - [ ] 03-03-PLAN.md — API incidentes + limpieza: GET /api/v1/incidents con filtros JWT, cleanup_old_data Celery beat 3am, tests INC-03/04
 
 ### Phase 4: VSOL OLT Collector
@@ -117,7 +117,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
 | 2. Foundation | 4/4 | Complete   | 2026-04-27 |
-| 3. Mikrotik + Alertas + Incidentes | 0/3 | Not started | - |
+| 3. Mikrotik + Alertas + Incidentes | 1/3 | In Progress|  |
 | 4. VSOL OLT Collector | 0/TBD | Not started | - |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
 | 6. Dashboard Completo | 0/TBD | Not started | - |

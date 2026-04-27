@@ -64,11 +64,11 @@
 
 ### ALERT — Alertas y Notificaciones
 
-- [ ] **ALERT-01**: El sistema envía mensaje a Telegram cuando un equipo pasa a estado DOWN (después del debounce de 3 polls)
-- [ ] **ALERT-02**: El sistema envía mensaje a Telegram cuando un equipo se recupera (DOWN → UP), indicando duración de la caída
-- [ ] **ALERT-03**: El sistema envía alerta a Telegram cuando la señal óptica de una ONU GPON cae por debajo de -28 dBm
-- [ ] **ALERT-04**: El sistema envía alerta a Telegram cuando el CPU de un router Mikrotik supera el 90% por más de 2 minutos consecutivos
-- [ ] **ALERT-05**: Los umbrales de alerta (dBm, CPU %) son configurables sin tocar el código
+- [x] **ALERT-01**: El sistema envía mensaje a Telegram cuando un equipo pasa a estado DOWN (después del debounce de 3 polls)
+- [x] **ALERT-02**: El sistema envía mensaje a Telegram cuando un equipo se recupera (DOWN → UP), indicando duración de la caída
+- [x] **ALERT-03**: El sistema envía alerta a Telegram cuando la señal óptica de una ONU GPON cae por debajo de -28 dBm
+- [x] **ALERT-04**: El sistema envía alerta a Telegram cuando el CPU de un router Mikrotik supera el 90% por más de 2 minutos consecutivos
+- [x] **ALERT-05**: Los umbrales de alerta (dBm, CPU %) son configurables sin tocar el código
 - [ ] **ALERT-06**: Los mensajes de Telegram incluyen: nombre del equipo, IP, sitio/ubicación, tipo de problema, timestamp
 
 ### DASH — Dashboard y Visualización
@@ -81,8 +81,8 @@
 
 ### INC — Historial e Incidentes
 
-- [ ] **INC-01**: El sistema registra automáticamente cada incidente: equipo afectado, hora de inicio (DOWN), hora de recuperación (UP), duración total
-- [ ] **INC-02**: El técnico puede ver la lista de incidentes ordenada por fecha, filtrable por equipo y sitio
+- [x] **INC-01**: El sistema registra automáticamente cada incidente: equipo afectado, hora de inicio (DOWN), hora de recuperación (UP), duración total
+- [x] **INC-02**: El técnico puede ver la lista de incidentes ordenada por fecha, filtrable por equipo y sitio
 - [ ] **INC-03**: Las métricas históricas se retienen 30 días; los incidentes se retienen 30 días
 - [ ] **INC-04**: La base de datos tiene política de limpieza automática para no crecer indefinidamente
 
@@ -141,14 +141,14 @@
 | MK-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | MK-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | MK-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| ALERT-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| ALERT-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| ALERT-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| ALERT-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| ALERT-05 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| ALERT-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| ALERT-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| ALERT-03 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| ALERT-04 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| ALERT-05 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | ALERT-06 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| INC-01 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
-| INC-02 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
+| INC-01 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
+| INC-02 | Phase 3: Mikrotik + Alertas + Incidentes | Complete |
 | INC-03 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | INC-04 | Phase 3: Mikrotik + Alertas + Incidentes | Pending |
 | VSOL-01 | Phase 4: VSOL OLT Collector | Pending |
