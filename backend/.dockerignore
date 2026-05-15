@@ -12,4 +12,3 @@ build/
 .pytest_cache/
 .coverage
 htmlcov/
-alembic/versions/

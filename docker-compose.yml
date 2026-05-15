@@ -1,0 +1,116 @@
+services:
+
+  # ── Base de datos ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: beepyred_noc
+      POSTGRES_USER: beepyred
+      POSTGRES_PASSWORD: beepyred_local
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U beepyred -d beepyred_noc"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── Cache / broker ──────────────────────────────────────────────────────────
+  redis:
+    image: redis:7.2-alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ── Migraciones (corre una vez y sale) ─────────────────────────────────────
+  migrate:
+    build:
+      context: ./backend
+      target: base
+    command: alembic upgrade head
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beepyred:beepyred_local@postgres:5432/beepyred_noc
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY}
+      FERNET_KEY: ${FERNET_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  # ── API FastAPI (hot reload) ─────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      target: base
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beepyred:beepyred_local@postgres:5432/beepyred_noc
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: on-failure
+
+  # ── Celery worker (sin Tailscale — en local los equipos son directamente accesibles) ──
+  worker:
+    build:
+      context: ./backend
+      target: base
+    command: celery -A app.celery_app worker --loglevel=info --concurrency=2
+    volumes:
+      - ./backend:/app
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beepyred:beepyred_local@postgres:5432/beepyred_noc
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: on-failure
+
+  # ── Celery beat (scheduler) ─────────────────────────────────────────────────
+  beat:
+    build:
+      context: ./backend
+      target: base
+    command: celery -A app.celery_app beat --loglevel=info --scheduler celery.beat:PersistentScheduler
+    volumes:
+      - ./backend:/app
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://beepyred:beepyred_local@postgres:5432/beepyred_noc
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    restart: on-failure
+
+volumes:
+  postgres_data:
+  redis_data:

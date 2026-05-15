@@ -19,19 +19,6 @@ depends_on: str | None = None
 
 
 def upgrade() -> None:
-    # ── Enums ──────────────────────────────────────────────────────────────────
-    devicetype = sa.Enum(
-        "mikrotik", "olt_vsol_gpon", "olt_vsol_epon", "onu",
-        "ubiquiti", "mimosa", "other",
-        name="devicetype"
-    )
-    devicestatus = sa.Enum(
-        "up", "down", "warning", "unknown",
-        name="devicestatus"
-    )
-    devicetype.create(op.get_bind(), checkfirst=True)
-    devicestatus.create(op.get_bind(), checkfirst=True)
-
     # ── Tabla devices ──────────────────────────────────────────────────────────
     op.create_table(
         "devices",
@@ -174,5 +161,5 @@ def downgrade() -> None:
     op.drop_table("metrics")
     op.drop_table("device_credentials")
     op.drop_table("devices")
-    sa.Enum(name="devicestatus").drop(op.get_bind(), checkfirst=True)
-    sa.Enum(name="devicetype").drop(op.get_bind(), checkfirst=True)
+    op.execute("DROP TYPE IF EXISTS devicestatus")
+    op.execute("DROP TYPE IF EXISTS devicetype")
