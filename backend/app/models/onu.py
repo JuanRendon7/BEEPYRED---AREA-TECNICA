@@ -21,6 +21,8 @@ class ONU(Base):
     serial_number: Mapped[str | None] = mapped_column(String(100), nullable=True)
     # Puerto PON: "0/1", "gpon0/1", "epon0/1", etc.
     pon_port: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    # Indice ONU dentro del puerto (1-64) — necesario para optical-info command
+    onu_index: Mapped[int | None] = mapped_column(Integer, nullable=True)
     # Senal optica en dBm — valor tipico GPON Rx: -8 a -27 dBm
     signal_rx_dbm: Mapped[Decimal | None] = mapped_column(Numeric(precision=8, scale=4), nullable=True)
     signal_tx_dbm: Mapped[Decimal | None] = mapped_column(Numeric(precision=8, scale=4), nullable=True)

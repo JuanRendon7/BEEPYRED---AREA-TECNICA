@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: gaps_closed
-stopped_at: "Phase 03 gap cerrado 2026-04-26 — Incidents.tsx creado, ruta /incidents con PrivateRoute, enlace en Dashboard. SC-1 (display métricas) diferido a Phase 6. Listo para Phase 04."
-last_updated: "2026-04-26T00:00:00Z"
-last_activity: 2026-04-26
+status: complete
+stopped_at: "Phase 04 ejecutado y completo 2026-05-14 — vsol_parser.py (20 tests), vsol_circuit_breaker.py (12 tests), vsol.py collector + upsert_onu, alerta señal baja, GET /api/v1/onus, ONUs.tsx. Suite: 199 tests verdes."
+last_updated: "2026-05-14T00:00:00Z"
+last_activity: 2026-05-14
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
-  percent: 100
+  completed_phases: 4
+  total_plans: 11
+  completed_plans: 11
+  percent: 67
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-04-25)
 
 **Core value:** El tecnico debe poder ver en un solo vistazo que equipo esta caido o degradado, sin entrar a cada equipo individualmente
-**Current focus:** Phase 03 — Mikrotik + Alertas + Incidentes (verificación con gaps)
+**Current focus:** Phase 05 — Ubiquiti y Mimosa Collectors (siguiente)
 
 ## Current Position
 
-Phase: 03 (Mikrotik + Alertas + Incidentes) — GAPS CLOSED
-Plan: 3 of 3
-Status: gaps_closed — 0 gaps activos, 1 ítem diferido a Phase 6 (display métricas)
-Last activity: 2026-04-26
+Phase: 04 (VSOL OLT Collector) — COMPLETE
+Plan: 2 of 2 — DONE
+Status: complete — 199 tests verdes, frontend ONUs.tsx operacional
+Last activity: 2026-05-14
 
-Progress: [██░░░░░░░░] 33%
+Progress: [████░░░░░░] 67%
 
 ## Performance Metrics
 
@@ -93,6 +93,13 @@ Recent decisions affecting current work:
 - [Phase 03]: circuit breaker: record_api_failure() elimina cb:fails al abrir el circuit — evita conteo doble si clave no expiro
 - [Phase 03]: result.mappings().all() + model_validate(dict(row)) es el patron para JOINs SQLAlchemy con Pydantic v2 — scalars() no funciona con columnas individuales de JOIN
 - [Phase 03]: resolved_at IS NOT NULL es guarda critica en DELETE de incidents — verificado por inspeccion de codigo fuente en test
+- [Phase 04]: OLT confirmada — BeepyRed_OLT_GPON_SanLuis, IP 192.168.8.200, firmware V2.3.1R, 8 puertos GPON, ~597 ONUs, SSH v2 RSA 2048-bit, max 3 sesiones SSH simultaneas
+- [Phase 04]: UNA sesion SSH por ciclo (no 8 paralelas) — respetar limite de 3 sesiones SSH del OLT
+- [Phase 04]: state poll cada 60s (8 comandos), optical poll cada 300s (N comandos por ONU ONLINE) — separados en dos beat tasks
+- [Phase 04]: ip_address="0.0.0.0" para ONUs + excluir DeviceType.ONU del ICMP polling en polling.py
+- [Phase 04]: prefijo Redis "vsol:" para circuit breaker VSOL — separado de "cb:" de Mikrotik
+- [Phase 04]: VSOL-02 (EPON) diferido — usuario confirmo que no hay OLT EPON actualmente
+- [Phase 04]: parsers CLI VSOL usan regex re.search() con logging de salida raw — tolerantes a variaciones de firmware, diagnosticables en primera ejecucion hands-on
 
 ### Pending Todos
 

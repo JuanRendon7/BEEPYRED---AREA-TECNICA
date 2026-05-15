@@ -58,6 +58,11 @@ class Settings(BaseSettings):
     # -- Mikrotik RouterOS API (Phase 3) -----------------------------------------
     MIKROTIK_API_PORT: int = 8728
 
+    # -- VSOL OLT SSH (Phase 4) --------------------------------------------------
+    VSOL_SSH_PORT: int = 22
+    VSOL_SSH_TIMEOUT: int = 30
+    VSOL_OPTICAL_POLL_INTERVAL: int = 300
+
     # -- Umbrales de alerta (Phase 3) ------------------------------------------------
     CPU_ALERT_THRESHOLD_PCT: float = 90.0
     ONU_SIGNAL_MIN_DBM: float = -28.0

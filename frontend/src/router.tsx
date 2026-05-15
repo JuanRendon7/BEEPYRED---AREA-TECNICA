@@ -9,6 +9,7 @@
  *   /dashboard  → DashboardPage (protegida)
  *   /inventory  → InventoryPage (protegida)
  *   /incidents  → IncidentsPage (protegida)
+ *   /onus       → ONUsPage (protegida)
  *   /           → redirect a /dashboard
  */
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
@@ -17,6 +18,7 @@ import { LoginPage } from "@/pages/Login";
 import { DashboardPage } from "@/pages/Dashboard";
 import { InventoryPage } from "@/pages/Inventory";
 import { IncidentsPage } from "@/pages/Incidents";
+import { ONUsPage } from "@/pages/ONUs";
 
 function PrivateRoute({ children }: { children: ReactNode }) {
   const token = localStorage.getItem("token");
@@ -52,6 +54,14 @@ export function AppRouter() {
           element={
             <PrivateRoute>
               <IncidentsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/onus"
+          element={
+            <PrivateRoute>
+              <ONUsPage />
             </PrivateRoute>
           }
         />

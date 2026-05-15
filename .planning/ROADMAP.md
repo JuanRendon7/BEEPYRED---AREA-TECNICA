@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 1: Infrastructure** - VPN, PostgreSQL schema, Railway multi-service, variables de entorno
 - [x] **Phase 2: Foundation** - Auth, inventario de equipos, polling ICMP, SSE dashboard basico (completed 2026-04-27)
 - [x] **Phase 3: Mikrotik + Alertas + Incidentes** - RouterOS API collector, motor de alertas Telegram con debounce, historial de incidentes (completed 2026-04-27)
-- [ ] **Phase 4: VSOL OLT Collector** - SSH/CLI parsing para OLTs VSOL GPON y EPON, estado y señal de ONUs
+- [x] **Phase 4: VSOL OLT Collector** - SSH/CLI parsing para OLTs VSOL GPON y EPON, estado y señal de ONUs (completed 2026-05-14)
 - [ ] **Phase 5: Ubiquiti y Mimosa Collectors** - UISP REST API y Mimosa REST API, metricas de radioenlaces
 - [ ] **Phase 6: Dashboard Completo** - Filtros, detalle por equipo, graficas de tendencia 24h, deploy final con dominio propio
 
@@ -73,16 +73,21 @@ Plans:
 - [x] 03-03-PLAN.md — API incidentes + limpieza: GET /api/v1/incidents con filtros JWT, cleanup_old_data Celery beat 3am, tests INC-03/04
 
 ### Phase 4: VSOL OLT Collector
-**Goal**: El tecnico puede ver el estado de todas las ONUs GPON y EPON — online/offline y senal optica Rx/Tx dBm — recolectado via SSH a las OLTs VSOL
+**Goal**: El tecnico puede ver el estado de todas las ONUs GPON — online/offline y senal optica Rx/Tx dBm — recolectado via SSH a la OLT VSOL BeepyRed_OLT_GPON_SanLuis (192.168.8.200, firmware V2.3.1R)
 **Depends on**: Phase 3
 **Requirements**: VSOL-01, VSOL-02, VSOL-03, VSOL-04, VSOL-05
 **Success Criteria** (what must be TRUE):
-  1. El sistema se conecta por SSH a las OLTs VSOL GPON (8 puertos) y EPON (4 puertos) y muestra la lista de ONUs por puerto con estado ONLINE/OFFLINE/RANGING y senal Rx/Tx dBm
+  1. El sistema se conecta por SSH a la OLT VSOL GPON (8 puertos) y muestra la lista de ONUs por puerto con estado ONLINE/OFFLINE/RANGING y senal Rx/Tx dBm
   2. Cada ONU aparece en el inventario con su OLT padre y puerto PON asociado
   3. Las conexiones SSH tienen timeout duro de 30 segundos y se cierran correctamente — no quedan conexiones colgadas en la OLT
-  4. Si una OLT falla 3 veces consecutivas su polling se suspende sin afectar el polling del resto de equipos (circuit breaker por OLT)
+  4. Si la OLT falla 3 veces consecutivas su polling se suspende sin afectar el polling del resto de equipos (circuit breaker por OLT)
   5. El tecnico recibe alerta Telegram cuando la senal optica de una ONU GPON cae por debajo del umbral configurado (-28 dBm por defecto)
-**Plans**: TBD
+**Note**: VSOL-02 (EPON) diferido — usuario confirmo que no hay OLT EPON actualmente.
+**Plans**: 2 plans
+
+Plans:
+- [x] 04-01-PLAN.md — asyncssh collector + parser CLI VSOL V2.3.1R + circuit breaker vsol: + ONU upsert (VSOL-01, VSOL-03, VSOL-04, VSOL-05)
+- [x] 04-02-PLAN.md — alerta Telegram senal baja + GET /api/v1/onus + frontend ONUs.tsx
 
 ### Phase 5: Ubiquiti y Mimosa Collectors
 **Goal**: El tecnico puede ver el estado de los radioenlaces Ubiquiti y Mimosa — senal, CCQ/modulacion y throughput — directamente en el dashboard
@@ -118,6 +123,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Infrastructure | 2/2 | Complete | 2026-04-26 |
 | 2. Foundation | 4/4 | Complete   | 2026-04-27 |
 | 3. Mikrotik + Alertas + Incidentes | 3/3 | Complete   | 2026-04-27 |
-| 4. VSOL OLT Collector | 0/TBD | Not started | - |
+| 4. VSOL OLT Collector | 2/2 | Complete | 2026-05-14 |
 | 5. Ubiquiti y Mimosa Collectors | 0/TBD | Not started | - |
 | 6. Dashboard Completo | 0/TBD | Not started | - |

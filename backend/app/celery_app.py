@@ -14,6 +14,7 @@ celery_app = Celery(
         "app.tasks.mikrotik",
         "app.tasks.alerts",
         "app.tasks.maintenance",
+        "app.tasks.vsol",
     ],
 )
 
@@ -48,6 +49,18 @@ celery_app.conf.update(
             "task": "tasks.cleanup_old_data",
             "schedule": crontab(hour=3, minute=0),  # 3am hora Colombia (UTC-5)
             "options": {"expires": 3600},  # si no se ejecuto en 1h, descartar
+        },
+        # VSOL-01: estado ONUs GPON cada 60s (mismo intervalo que ICMP polling)
+        "poll-vsol-state": {
+            "task": "tasks.poll_all_vsol_olts_state",
+            "schedule": settings.POLL_INTERVAL_SECONDS,
+            "options": {"expires": settings.POLL_INTERVAL_SECONDS - 5},
+        },
+        # VSOL-03: senal optica ONUs cada 300s (configurable VSOL_OPTICAL_POLL_INTERVAL)
+        "poll-vsol-optical": {
+            "task": "tasks.poll_all_vsol_olts_optical",
+            "schedule": settings.VSOL_OPTICAL_POLL_INTERVAL,
+            "options": {"expires": settings.VSOL_OPTICAL_POLL_INTERVAL - 10},
         },
     },
 )

@@ -26,7 +26,7 @@ from sqlalchemy import select
 
 from app.core.config import settings
 from app.core.database import AsyncSessionLocal
-from app.models.device import Device, DeviceStatus
+from app.models.device import Device, DeviceStatus, DeviceType
 
 # Semaforo global por proceso — MAX_CONCURRENT_CONNECTIONS=50
 # Nota: es por-proceso Celery; con concurrency=1 en polling worker no hay doble conteo
@@ -55,7 +55,9 @@ async def _poll_all_devices_async() -> dict:
     """Obtiene lista de dispositivos activos y ejecuta ping concurrente."""
     async with AsyncSessionLocal() as db:
         result = await db.execute(
-            select(Device).where(Device.is_active == True)  # noqa: E712
+            select(Device)
+            .where(Device.is_active == True)  # noqa: E712
+            .where(Device.device_type != DeviceType.ONU)  # ONUs no tienen IP real
         )
         devices = list(result.scalars().all())
 
